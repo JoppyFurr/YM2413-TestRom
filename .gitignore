@@ -1,0 +1,8 @@
+# Ignore build artefacts and output
+*.sms
+*.zip
+*.png
+build/
+tile_data/
+!tiles/*.png
+

@@ -7,6 +7,22 @@ sdcc="${HOME}/Code/sdcc-4.2.0/bin/sdcc"
 devkitSMS="${HOME}/Code/devkitSMS"
 SMSlib="${devkitSMS}/SMSlib"
 ihx2sms="${devkitSMS}/ihx2sms/Linux/ihx2sms"
+sneptile="./tools/Sneptile-0.1.0/Sneptile"
+
+build_sneptile ()
+{
+    # Early return if we've already got an up-to-date build
+    if [ -e $sneptile -a "./tools/Sneptile-0.1.0/source/main.c" -ot $sneptile ]
+    then
+        return
+    fi
+
+    echo "Building Sneptile..."
+    (
+        cd "tools/Sneptile-0.1.0"
+        ./build.sh
+    )
+}
 
 build_ym2413_test_rom ()
 {
@@ -36,4 +52,5 @@ build_ym2413_test_rom ()
 # Clean up any old build artefacts
 rm -rf build
 
+build_sneptile
 build_ym2413_test_rom

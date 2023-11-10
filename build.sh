@@ -28,6 +28,16 @@ build_ym2413_test_rom ()
 {
     echo "Building YM2413 Test ROM..."
 
+    echo "  Generating tile data..."
+    mkdir -p tile_data
+    (
+        # Note: Index 0 is used for transparency, use dark grey, our background colour.
+        $sneptile --output tile_data --palette 0x15 \
+            tiles/empty.png \
+            tiles/digits.png \
+            tiles/keys.png
+    )
+
     mkdir -p build
     echo "  Compiling..."
     for file in main

@@ -36,7 +36,8 @@ build_ym2413_test_rom ()
             tiles/empty.png \
             tiles/digits.png \
             tiles/keys.png \
-            tiles/labels.png
+            tiles/labels.png \
+            tiles/led.png
     )
 
     mkdir -p build

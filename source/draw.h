@@ -15,5 +15,8 @@ void draw_reset (void);
 /* Draw the control labels. */
 void draw_labels (void);
 
+/* Draw an LED indicator. */
+void draw_led (uint8_t x, uint8_t y, bool value);
+
 /* Draw a two digit value indicator. */
 void draw_value (uint8_t x, uint8_t y, uint8_t value);

@@ -253,6 +253,24 @@ void draw_labels (void)
 
 
 /*
+ * Draw an LED indicator.
+ */
+void draw_led (uint8_t x, uint8_t y, bool value)
+{
+    if (value)
+    {
+        SMS_setTileatXY (x,     y, PATTERN_LED + 2);
+        SMS_setTileatXY (x + 1, y, PATTERN_LED + 3);
+    }
+    else
+    {
+        SMS_setTileatXY (x,     y, PATTERN_LED + 0);
+        SMS_setTileatXY (x + 1, y, PATTERN_LED + 1);
+    }
+}
+
+
+/*
  * Fill the name table with tile-zero.
  */
 void draw_reset (void)

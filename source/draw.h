@@ -11,3 +11,6 @@ void draw_keyboard_update (uint8_t key, bool active);
 
 /* Fill the name table with tile-zero. */
 void draw_reset (void);
+
+/* Draw the control labels. */
+void draw_labels (void);

@@ -27,6 +27,7 @@ void main (void)
     SMS_loadTiles (patterns, 0, sizeof (patterns));
     SMS_setBGScrollX (0xfc);
     draw_reset ();
+    draw_labels ();
     draw_keyboard ();
 
     SMS_displayOn ();

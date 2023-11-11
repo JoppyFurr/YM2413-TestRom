@@ -35,7 +35,8 @@ build_ym2413_test_rom ()
         $sneptile --output tile_data --palette 0x15 \
             tiles/empty.png \
             tiles/digits.png \
-            tiles/keys.png
+            tiles/keys.png \
+            tiles/labels.png
     )
 
     mkdir -p build

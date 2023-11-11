@@ -179,6 +179,80 @@ void draw_keyboard_update (uint8_t key, bool active)
 
 
 /*
+ * Draw the control labels.
+ */
+void draw_labels (void)
+{
+    /* Modulator / Carrier headings */
+    const uint16_t mod_car_headings [] = {
+        PATTERN_LABELS +  0, PATTERN_LABELS + 17, PATTERN_LABELS + 34, PATTERN_LABELS + 51,
+        PATTERN_LABELS + 68, PATTERN_LABELS + 85, PATTERN_LABELS + 18, PATTERN_LABELS + 35,
+        PATTERN_LABELS + 52, PATTERN_LABELS + 69, PATTERN_LABELS + 86 };
+    SMS_loadTileMapArea (1, 4, mod_car_headings, 1, 11);
+
+    /* Inst, vol, sust */
+    const uint16_t inst_vol_sust [] = {
+        PATTERN_LABELS + 1, PATTERN_LABELS + 2, PATTERN_EMPTY,
+        PATTERN_LABELS + 3, PATTERN_LABELS + 4, PATTERN_EMPTY,
+        PATTERN_LABELS + 5, PATTERN_LABELS + 6
+    };
+    SMS_loadTileMapArea (4, 3, inst_vol_sust, 8, 1);
+
+    /* Feedback, total-level */
+    const uint16_t feedback_tl [] = {
+        PATTERN_LABELS + 42, PATTERN_LABELS + 43, PATTERN_LABELS + 44, PATTERN_LABELS + 45,
+        PATTERN_LABELS + 46, PATTERN_LABELS + 47, PATTERN_LABELS + 59, PATTERN_LABELS + 60,
+        PATTERN_LABELS + 61, PATTERN_LABELS + 62, PATTERN_LABELS + 63, PATTERN_LABELS + 64
+    };
+    SMS_loadTileMapArea (25, 3, feedback_tl, 6, 2);
+
+    /* Multi */
+    const uint16_t multi [] = {
+        PATTERN_LABELS +  7, PATTERN_LABELS +  8, PATTERN_LABELS +  9, PATTERN_LABELS + 10,
+        PATTERN_LABELS + 19, PATTERN_LABELS + 20, PATTERN_LABELS + 21, PATTERN_LABELS + 22,
+    };
+    SMS_loadTileMapArea (3,  8, &multi [0], 4, 1);
+    SMS_loadTileMapArea (3, 13, &multi [4], 4, 1);
+
+    /* KSR, vibrato, eg-type, AM, waveform */
+    const uint16_t bit_labels [] = {
+        PATTERN_LABELS + 11, PATTERN_LABELS + 12, PATTERN_EMPTY,       PATTERN_LABELS + 13,
+        PATTERN_LABELS + 14, PATTERN_LABELS + 36, PATTERN_LABELS + 37, PATTERN_LABELS + 38,
+        PATTERN_LABELS + 39, PATTERN_LABELS + 40, PATTERN_LABELS + 41, PATTERN_LABELS + 27,
+        PATTERN_LABELS + 28, PATTERN_LABELS + 29, PATTERN_LABELS + 30, PATTERN_LABELS + 31,
+        PATTERN_LABELS + 32,
+
+        PATTERN_LABELS + 23, PATTERN_LABELS + 24, PATTERN_EMPTY,       PATTERN_LABELS + 25,
+        PATTERN_LABELS + 26, PATTERN_LABELS + 53, PATTERN_LABELS + 54, PATTERN_LABELS + 55,
+        PATTERN_LABELS + 56, PATTERN_LABELS + 57, PATTERN_LABELS + 58, PATTERN_LABELS + 48,
+        PATTERN_LABELS + 49, PATTERN_LABELS + 50, PATTERN_LABELS + 65, PATTERN_LABELS + 66,
+        PATTERN_LABELS + 67
+    };
+    SMS_loadTileMapArea (7,   7, &bit_labels [ 0], 5, 1);
+    SMS_loadTileMapArea (6,   9, &bit_labels [ 5], 6, 1);
+    SMS_loadTileMapArea (13,  7, &bit_labels [11], 3, 2);
+
+    SMS_loadTileMapArea (7,  12, &bit_labels [17], 5, 1);
+    SMS_loadTileMapArea (6,  14, &bit_labels [22], 6, 1);
+    SMS_loadTileMapArea (13, 12, &bit_labels [28], 3, 2);
+
+    /* KSL, A.rate, D.rate, S.level, R.rate */
+    const uint16_t ksl_adsr [] = {
+        PATTERN_LABELS + 70, PATTERN_LABELS + 71, PATTERN_LABELS + 72, PATTERN_LABELS + 73,
+        PATTERN_LABELS + 74, PATTERN_LABELS + 75, PATTERN_LABELS + 76, PATTERN_LABELS + 77,
+        PATTERN_LABELS + 78, PATTERN_LABELS + 79, PATTERN_LABELS + 80, PATTERN_LABELS + 81,
+        PATTERN_LABELS + 82, PATTERN_LABELS + 83, PATTERN_LABELS + 84,
+        PATTERN_LABELS + 87, PATTERN_LABELS + 88, PATTERN_LABELS + 89, PATTERN_LABELS + 90,
+        PATTERN_LABELS + 91, PATTERN_LABELS + 92, PATTERN_LABELS + 93, PATTERN_LABELS + 94,
+        PATTERN_LABELS + 95, PATTERN_LABELS + 96, PATTERN_LABELS + 97, PATTERN_LABELS + 98,
+        PATTERN_LABELS + 99, PATTERN_LABELS + 100, PATTERN_LABELS + 101
+    };
+    SMS_loadTileMapArea (16,  8, &ksl_adsr [ 0], 15, 1);
+    SMS_loadTileMapArea (16, 13, &ksl_adsr [15], 15, 1);
+}
+
+
+/*
  * Fill the name table with tile-zero.
  */
 void draw_reset (void)
@@ -187,6 +261,6 @@ void draw_reset (void)
 
     for (uint8_t row = 0; row < 24; row++)
     {
-        SMS_loadTileMapArea (0, row, &blank_line, 32, 1);
+        SMS_loadTileMapArea (0, row, blank_line, 32, 1);
     }
 }

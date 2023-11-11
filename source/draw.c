@@ -264,3 +264,26 @@ void draw_reset (void)
         SMS_loadTileMapArea (0, row, blank_line, 32, 1);
     }
 }
+
+
+/*
+ * Draw a two digit value indicator.
+ */
+void draw_value (uint8_t x, uint8_t y, uint8_t value)
+{
+    uint8_t digit_1 = value / 10;
+    uint8_t digit_2 = value % 10;
+
+    /* First digit */
+    if (digit_1 == 0)
+    {
+        digit_1 = 10;
+    }
+    SMS_setTileatXY (x, y,     PATTERN_DIGITS + digit_1);
+    SMS_setTileatXY (x, y + 1, PATTERN_DIGITS + digit_1 + 11);
+
+    /* Second digit */
+    SMS_setTileatXY (x + 1, y,     PATTERN_DIGITS + digit_2);
+    SMS_setTileatXY (x + 1, y + 1, PATTERN_DIGITS + digit_2 + 11);
+
+}

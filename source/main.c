@@ -30,6 +30,25 @@ void main (void)
     draw_labels ();
     draw_keyboard ();
 
+    draw_value (4, 1, 0); /* Inst */
+    draw_value (7, 1, 1); /* Vol */
+    draw_value (25, 1, 2); /* Feedback */
+    draw_value (28, 1, 3); /* Total level */
+
+    draw_value (4, 6, 4); /* Multi (mod) */
+    draw_value (16, 6, 5); /* KSL (mod) */
+    draw_value (19, 6, 6); /* A.Rate (mod) */
+    draw_value (22, 6, 7); /* D.Rate (mod) */
+    draw_value (25, 6, 8); /* S.Level (mod) */
+    draw_value (28, 6, 9); /* R.Rate (mod) */
+
+    draw_value (4, 11, 10); /* Multi (car) */
+    draw_value (16, 11, 11); /* KSL (car) */
+    draw_value (19, 11, 12); /* A.Rate (car) */
+    draw_value (22, 11, 13); /* D.Rate (car) */
+    draw_value (25, 11, 14); /* S.Lev (car) */
+    draw_value (28, 11, 15); /* R.Rate (car) */
+
     SMS_displayOn ();
 
     /* Main loop */
@@ -44,6 +63,7 @@ void main (void)
         if (frame_count == 30)
         {
             draw_keyboard_update (current_key, true);
+            draw_value (4, 1, current_key); /* Inst */
         }
 
         if (frame_count == 60)

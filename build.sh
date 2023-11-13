@@ -34,6 +34,7 @@ build_ym2413_test_rom ()
         # Note: Index 0 is used for transparency, use dark grey, our background colour.
         $sneptile --output tile_data --palette 0x15 \
             tiles/empty.png \
+            tiles/cursor.png \
             tiles/digits.png \
             tiles/keys.png \
             tiles/labels.png \

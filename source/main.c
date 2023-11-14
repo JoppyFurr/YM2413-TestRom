@@ -203,6 +203,10 @@ gui_element_t main_gui [ELEMENT_COUNT] = {
         .type = TYPE_VALUE, .max = 15, .x = 28, .y = 11, .height = 3,
         .up   = ELEMENT_MOD_RELEASE_RATE,   .down  = ELEMENT_KEYBOARD,
         .left = ELEMENT_CAR_SUSTAIN_LEVEL,  .right = ELEMENT_CAR_RELEASE_RATE
+    },
+    [ELEMENT_KEYBOARD] = {
+        .down = ELEMENT_KEYBOARD,
+        .left = ELEMENT_KEYBOARD,           .right = ELEMENT_KEYBOARD
     }
 };
 
@@ -272,6 +276,8 @@ void main (void)
     }
 
     element_id_t current_element = ELEMENT_INSTRUMENT;
+    uint8_t keyboard_key = 0;
+
     cursor_update (main_gui [current_element].x,
                    main_gui [current_element].y,
                    main_gui [current_element].height);
@@ -279,10 +285,6 @@ void main (void)
     SMS_displayOn ();
 
     /* Main loop */
-    uint8_t frame_count = 0;
-    uint8_t current_key = 0;
-
-
     while (true)
     {
         SMS_waitForVBlank ();
@@ -291,45 +293,82 @@ void main (void)
         switch (keys_pressed)
         {
             case PORT_A_KEY_UP:
-                current_element = main_gui [current_element].up;
+                if (current_element == ELEMENT_KEYBOARD)
+                {
+                    /* TODO: This keyboard logic should be moved out of main. */
+                    draw_keyboard_update (keyboard_key, false);
+                    if      (keyboard_key < 5 ) current_element = ELEMENT_CAR_MULTI;
+                    else if (keyboard_key < 8 ) current_element = ELEMENT_CAR_ENVELOPE_TYPE;
+                    else if (keyboard_key < 11) current_element = ELEMENT_CAR_AM;
+                    else if (keyboard_key < 14) current_element = ELEMENT_CAR_WAVEFORM;
+                    else if (keyboard_key < 17) current_element = ELEMENT_CAR_KSL;
+                    else if (keyboard_key < 20) current_element = ELEMENT_CAR_ATTACK_RATE;
+                    else if (keyboard_key < 23) current_element = ELEMENT_CAR_DECAY_RATE;
+                    else if (keyboard_key < 26) current_element = ELEMENT_CAR_SUSTAIN_LEVEL;
+                    else                        current_element = ELEMENT_CAR_RELEASE_RATE;
+                }
+                else
+                {
+                    current_element = main_gui [current_element].up;
+                }
                 break;
             case PORT_A_KEY_DOWN:
-                current_element = main_gui [current_element].down;
+                if (current_element != ELEMENT_KEYBOARD)
+                {
+                    if (main_gui [current_element].down == ELEMENT_KEYBOARD)
+                    {
+                        /* Hide the cursor */
+                        SMS_initSprites ();
+                        SMS_copySpritestoSAT ();
+
+                        /* Select a key */
+                        keyboard_key = main_gui [current_element].x - 2;
+                        draw_keyboard_update (keyboard_key, true);
+                    }
+                    current_element = main_gui [current_element].down;
+                }
                 break;
             case PORT_A_KEY_LEFT:
-                current_element = main_gui [current_element].left;
+                if (current_element == ELEMENT_KEYBOARD)
+                {
+                    if (keyboard_key > 0)
+                    {
+                        draw_keyboard_update (keyboard_key, false);
+                        keyboard_key--;
+                        draw_keyboard_update (keyboard_key, true);
+                    }
+                }
+                else
+                {
+                    current_element = main_gui [current_element].left;
+                }
                 break;
             case PORT_A_KEY_RIGHT:
-                current_element = main_gui [current_element].right;
+                if (current_element == ELEMENT_KEYBOARD)
+                {
+                    if (keyboard_key < 28)
+                    {
+                        draw_keyboard_update (keyboard_key, false);
+                        keyboard_key++;
+                        draw_keyboard_update (keyboard_key, true);
+                    }
+                }
+                else
+                {
+                    current_element = main_gui [current_element].right;
+                }
                 break;
             default:
                 break;
         }
-        /* TODO: Only update when needed */
-        cursor_update (main_gui [current_element].x,
-                       main_gui [current_element].y,
-                       main_gui [current_element].height);
 
-        /* DEBUG - Cycle through the keys. */
-        frame_count++;
-        if (frame_count == 30)
+        /* TODO: Only update when a change occurred */
+        if (current_element != ELEMENT_KEYBOARD)
         {
-            draw_keyboard_update (current_key, true);
-            draw_value (4, 1, current_key); /* Inst */
-            draw_led   (10, 2, true); /* Sustain */
+            cursor_update (main_gui [current_element].x,
+                           main_gui [current_element].y,
+                           main_gui [current_element].height);
         }
-        if (frame_count == 60)
-        {
-            draw_keyboard_update (current_key, false);
-            draw_led   (10, 2, false); /* Sustain */
-            frame_count = 0;
-            current_key++;
-            if (current_key > 28)
-            {
-                current_key = 0;
-            }
-        }
-
     }
 }
 

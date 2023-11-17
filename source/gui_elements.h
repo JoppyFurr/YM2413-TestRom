@@ -5,7 +5,8 @@
 
 typedef enum element_type_e {
     TYPE_VALUE = 0,
-    TYPE_LED
+    TYPE_LED,
+    TYPE_KEYBOARD
 } element_type_t;
 
 typedef enum element_id_e {
@@ -195,7 +196,7 @@ static const gui_element_t main_gui [ELEMENT_COUNT] = {
         .left = ELEMENT_CAR_SUSTAIN_LEVEL,  .right = ELEMENT_CAR_RELEASE_RATE
     },
     [ELEMENT_KEYBOARD] = {
-        .height = 0,
+        .type = TYPE_KEYBOARD, .height = 0,
         .down = ELEMENT_KEYBOARD,
         .left = ELEMENT_KEYBOARD,           .right = ELEMENT_KEYBOARD
     }

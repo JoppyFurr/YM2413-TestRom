@@ -21,8 +21,9 @@ typedef struct gui_state_s {
     element_id_t current_element;
     uint8_t keyboard_key;
 
-    bool keyboard_update;
     bool cursor_update;
+    bool keyboard_update;
+    bool element_update;
 
     uint16_t element_values [ELEMENT_COUNT];
 
@@ -141,6 +142,34 @@ static void element_navigate (gui_state_t *gui_state, uint16_t key_pressed)
         gui_state->cursor_update = true;
     }
 }
+
+
+/*
+ * Update the value of an parameter when a button is pressed.
+ */
+static void element_update (gui_state_t *state, uint16_t key_pressed)
+{
+    const gui_element_t *element = &main_gui [state->current_element];
+    uint16_t *value = &state->element_values [state->current_element];
+
+    if (element->type == TYPE_VALUE)
+    {
+        if (key_pressed == PORT_A_KEY_1 && *value > 0)
+        {
+            *value -= 1;
+            state->element_update = true;
+        }
+        else if (key_pressed == PORT_A_KEY_2 && *value < element->max)
+        {
+            *value += 1;
+            state->element_update = true;
+        }
+    }
+    else if (element->type == TYPE_LED)
+    {
+        *value ^= 0x0001;
+        state->element_update = true;
+    }
 }
 
 
@@ -202,6 +231,11 @@ void main (void)
                 element_navigate (&gui_state, key_pressed);
                 break;
 
+            case PORT_A_KEY_1:
+            case PORT_A_KEY_2:
+                element_update (&gui_state, key_pressed);
+                break;
+
             default:
                 break;
         }
@@ -230,6 +264,21 @@ void main (void)
 
             previous_key = gui_state.keyboard_key;
             gui_state.keyboard_update = false;
+        }
+
+        if (element_update)
+        {
+            const gui_element_t *element = &main_gui [gui_state.current_element];
+            uint16_t value = gui_state.element_values [gui_state.current_element];
+
+            if (element->type == TYPE_VALUE)
+            {
+                draw_value (element->x, element->y, value);
+            }
+            else if (element->type == TYPE_LED)
+            {
+                draw_led (element->x, element->y, value);
+            }
         }
     }
 }

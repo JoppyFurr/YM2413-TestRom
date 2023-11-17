@@ -56,22 +56,27 @@ typedef struct gui_element_s {
     element_id_t left;
     element_id_t right;
 
+    void (*callback) (uint16_t value);
+
 } gui_element_t;
 
 
 static const gui_element_t main_gui [ELEMENT_COUNT] = {
     [ELEMENT_INSTRUMENT] = {
         .type = TYPE_VALUE, .max = 15, .x = 4, .y = 1, .height = 3,
+        .callback = register_write_instrument,
         .up   = ELEMENT_INSTRUMENT,         .down  = ELEMENT_MOD_MULTI,
         .left = ELEMENT_INSTRUMENT,         .right = ELEMENT_VOLUME
     },
     [ELEMENT_VOLUME] = {
         .type = TYPE_VALUE, .max = 15, .x = 7, .y = 1, .height = 3,
+        .callback = register_write_volume,
         .up   = ELEMENT_VOLUME,             .down  = ELEMENT_MOD_KSR,
         .left = ELEMENT_INSTRUMENT,         .right = ELEMENT_SUSTAIN
     },
     [ELEMENT_SUSTAIN] = {
         .type = TYPE_LED, .max = 1, .x = 10, .y = 2, .height = 2,
+        .callback = register_write_sustain,
         .up   = ELEMENT_SUSTAIN,            .down  = ELEMENT_MOD_VIBRATO,
         .left = ELEMENT_VOLUME,             .right = ELEMENT_FEEDBACK
     },

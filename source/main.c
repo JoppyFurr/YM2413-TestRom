@@ -12,6 +12,7 @@
 #include "../tile_data/palette.h"
 #include "../tile_data/pattern.h"
 #include "../tile_data/pattern_index.h"
+#include "register.h"
 #include "gui_elements.h"
 #include "draw.h"
 
@@ -266,7 +267,7 @@ void main (void)
             gui_state.keyboard_update = false;
         }
 
-        if (element_update)
+        if (gui_state.element_update)
         {
             const gui_element_t *element = &main_gui [gui_state.current_element];
             uint16_t value = gui_state.element_values [gui_state.current_element];
@@ -279,6 +280,13 @@ void main (void)
             {
                 draw_led (element->x, element->y, value);
             }
+
+            if (element->callback)
+            {
+                element->callback (value);
+            }
+
+            gui_state.element_update = false;
         }
     }
 }

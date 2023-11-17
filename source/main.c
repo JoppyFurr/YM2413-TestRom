@@ -396,7 +396,12 @@ void main (void)
         {
             if (key_pressed == PORT_A_KEY_1)
             {
-                note_t *note = &notes [1] [gui_state.keyboard_key - 1];
+                uint8_t multi = 1;
+                if (gui_state.element_values [ELEMENT_INSTRUMENT] == 0)
+                {
+                    multi = gui_state.element_values [ELEMENT_CAR_MULTI];
+                }
+                note_t *note = &notes [multi] [gui_state.keyboard_key - 1];
                 register_write_fnum_block (note->fnum, note->block);
                 register_write_key_on (1);
             }

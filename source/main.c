@@ -397,10 +397,25 @@ void main (void)
                 draw_keyboard_update (previous_key - 1, false);
             }
 
-            if (gui_state.keyboard_key > 0)
+            if (gui_state.current_element == ELEMENT_KEYBOARD)
             {
                 draw_keyboard_update (gui_state.keyboard_key - 1, true);
+
+                /* Update fnum, block */
+                uint8_t multi = 1;
+                if (gui_state.element_values [ELEMENT_INSTRUMENT] == 0)
+                {
+                    multi = gui_state.element_values [ELEMENT_CAR_MULTI];
+                }
+                note_t *note = &notes [multi] [gui_state.keyboard_key - 1];
+                register_write_fnum_block (note->fnum, note->block);
             }
+            else
+            {
+                /* Treat leaving the keyboard as letting go of the key */
+                register_write_key_on (0);
+            }
+
 
             previous_key = gui_state.keyboard_key;
             gui_state.keyboard_update = false;
@@ -432,13 +447,6 @@ void main (void)
         {
             if (key_pressed == PORT_A_KEY_1)
             {
-                uint8_t multi = 1;
-                if (gui_state.element_values [ELEMENT_INSTRUMENT] == 0)
-                {
-                    multi = gui_state.element_values [ELEMENT_CAR_MULTI];
-                }
-                note_t *note = &notes [multi] [gui_state.keyboard_key - 1];
-                register_write_fnum_block (note->fnum, note->block);
                 register_write_key_on (1);
             }
             else if (key_released == PORT_A_KEY_1)

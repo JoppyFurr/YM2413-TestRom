@@ -35,6 +35,35 @@ typedef struct note_s {
     uint8_t block;
 } note_t;
 
+static const uint16_t register_defaults [ELEMENT_COUNT] = {
+    [ELEMENT_INSTRUMENT] = 0,
+    [ELEMENT_VOLUME] = 0,
+    [ELEMENT_SUSTAIN] = 0,
+    [ELEMENT_FEEDBACK] = 0,
+    [ELEMENT_TOTAL_LEVEL] = 40,
+    [ELEMENT_MOD_MULTI] = 1,
+    [ELEMENT_MOD_KSR] = 0,
+    [ELEMENT_MOD_VIBRATO] = 0,
+    [ELEMENT_MOD_WAVEFORM] = 0,
+    [ELEMENT_MOD_ENVELOPE_TYPE] = 0,
+    [ELEMENT_MOD_AM] = 0,
+    [ELEMENT_MOD_KSL] = 0,
+    [ELEMENT_MOD_ATTACK_RATE] = 15,
+    [ELEMENT_MOD_DECAY_RATE] = 0,
+    [ELEMENT_MOD_SUSTAIN_LEVEL] = 0,
+    [ELEMENT_MOD_RELEASE_RATE] = 0,
+    [ELEMENT_CAR_MULTI] = 1,
+    [ELEMENT_CAR_KSR] = 0,
+    [ELEMENT_CAR_VIBRATO] = 0,
+    [ELEMENT_CAR_WAVEFORM] = 0,
+    [ELEMENT_CAR_ENVELOPE_TYPE] = 0,
+    [ELEMENT_CAR_AM] = 0,
+    [ELEMENT_CAR_KSL] = 0,
+    [ELEMENT_CAR_ATTACK_RATE] = 15,
+    [ELEMENT_CAR_DECAY_RATE] = 0,
+    [ELEMENT_CAR_SUSTAIN_LEVEL] = 0,
+    [ELEMENT_CAR_RELEASE_RATE] = 0
+};
 
 note_t notes [16] [29] = {
 
@@ -298,18 +327,25 @@ void main (void)
     draw_labels ();
     draw_keyboard ();
 
-    /* Initial draw of GUI elements */
+    /* Initialise GUI elements and register defaults */
     for (uint8_t i = 0; i < ELEMENT_KEYBOARD; i++)
     {
         const gui_element_t *element = &main_gui [i];
+        uint16_t value = register_defaults [i];
+        gui_state.element_values [i] = value;
 
         if (element->type == TYPE_VALUE)
         {
-            draw_value (element->x, element->y, 0);
+            draw_value (element->x, element->y, value);
         }
         else if (element->type == TYPE_LED)
         {
-            draw_led (element->x, element->y, false);
+            draw_led (element->x, element->y, value);
+        }
+
+        if (element->callback)
+        {
+            element->callback (value);
         }
     }
 

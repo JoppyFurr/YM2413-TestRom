@@ -20,3 +20,6 @@ void draw_led (uint8_t x, uint8_t y, bool value);
 
 /* Draw a two digit value indicator. */
 void draw_value (uint8_t x, uint8_t y, uint8_t value);
+
+/* Draw a dimmed-out two digit value indicator. */
+void draw_value_hidden (uint8_t x, uint8_t y);

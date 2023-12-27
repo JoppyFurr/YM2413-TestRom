@@ -305,3 +305,18 @@ void draw_value (uint8_t x, uint8_t y, uint8_t value)
     SMS_setTileatXY (x + 1, y + 1, PATTERN_DIGITS + digit_2 + 11);
 
 }
+
+
+/*
+ * Draw a dimmed-out two digit value indicator.
+ */
+void draw_value_hidden (uint8_t x, uint8_t y)
+{
+    /* First digit */
+    SMS_setTileatXY (x, y,     PATTERN_DIGITS + 10);
+    SMS_setTileatXY (x, y + 1, PATTERN_DIGITS + 21);
+
+    /* Second digit */
+    SMS_setTileatXY (x + 1, y,     PATTERN_DIGITS + 10);
+    SMS_setTileatXY (x + 1, y + 1, PATTERN_DIGITS + 21);
+}

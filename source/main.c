@@ -107,6 +107,47 @@ static void cursor_update (uint8_t x, uint8_t y, uint8_t height)
 
 
 /*
+ * Disable the display of custom instrument parameters.
+ */
+static void custom_instrument_hide (gui_state_t *state, bool hide)
+{
+    if (hide)
+    {
+        for (uint8_t i = ELEMENT_FEEDBACK; i < ELEMENT_KEYBOARD; i++)
+        {
+            const gui_element_t *element = &main_gui [i];
+
+            if (element->type == TYPE_VALUE)
+            {
+                draw_value_hidden (element->x, element->y);
+            }
+            else if (element->type == TYPE_LED)
+            {
+                draw_led (element->x, element->y, false);
+            }
+        }
+    }
+    else
+    {
+        for (uint8_t i = ELEMENT_FEEDBACK; i < ELEMENT_KEYBOARD; i++)
+        {
+            const gui_element_t *element = &main_gui [i];
+            uint16_t value = state->element_values [i];
+
+            if (element->type == TYPE_VALUE)
+            {
+                draw_value (element->x, element->y, value);
+            }
+            else if (element->type == TYPE_LED)
+            {
+                draw_led (element->x, element->y, value);
+            }
+        }
+    }
+}
+
+
+/*
  * Move the cursor to select a different GUI element.
  */
 static void element_navigate (gui_state_t *gui_state, uint16_t key_pressed)
@@ -194,6 +235,13 @@ static void element_update (gui_state_t *state, uint16_t key_pressed)
 {
     const gui_element_t *element = &main_gui [state->current_element];
     uint16_t *value = &state->element_values [state->current_element];
+
+    /* Ignore custom instrument parameters when the custom instrument isn't selected */
+    if (state->element_values [ELEMENT_INSTRUMENT] != 0 &&
+        state->current_element >= ELEMENT_FEEDBACK && state->current_element <= ELEMENT_CAR_RELEASE_RATE)
+    {
+        return;
+    }
 
     if (element->type == TYPE_VALUE)
     {
@@ -343,6 +391,12 @@ void main (void)
             if (element->callback)
             {
                 element->callback (value);
+            }
+
+            /* Dim custom instrument settings when the custom instrument is not in use */
+            if (gui_state.current_element == ELEMENT_INSTRUMENT)
+            {
+                custom_instrument_hide (&gui_state, value > 0);
             }
 
             gui_state.element_update = false;

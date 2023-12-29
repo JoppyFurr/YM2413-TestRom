@@ -271,6 +271,35 @@ void draw_led (uint8_t x, uint8_t y, bool value)
 
 
 /*
+ * Draw the name of the selected instrument.
+ */
+void draw_name (uint8_t instrument)
+{
+    const uint8_t bases [16] =   {0, 4, 7, 10, 13, 16, 20, 22, 26, 29, 32, 38, 44, 49, 57, 62};
+    const uint8_t lengths [16] = {4, 3, 3,  3,  3,  4,  2,  4,  3,  3,  6,  6,  5,  8,  5,  7};
+
+    uint16_t name_tiles [8];
+    uint16_t name_base = PATTERN_NAMES + bases [instrument];
+    uint8_t name_len = lengths [instrument];
+
+
+    for (uint8_t i = 0; i < 8; i++)
+    {
+        if (i < name_len)
+        {
+            name_tiles [i] = name_base + i;
+        }
+        else
+        {
+            name_tiles [i] = PATTERN_KEYS + 0;
+        }
+    }
+
+    SMS_loadTileMapArea (2, 16, name_tiles, 8, 1);
+}
+
+
+/*
  * Fill the name table with tile-zero.
  */
 void draw_reset (void)

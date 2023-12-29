@@ -285,6 +285,7 @@ void main (void)
     draw_reset ();
     draw_labels ();
     draw_keyboard ();
+    draw_name (0);
 
     /* Initialise GUI elements and register defaults */
     for (uint8_t i = 0; i < ELEMENT_KEYBOARD; i++)
@@ -397,6 +398,7 @@ void main (void)
             if (gui_state.current_element == ELEMENT_INSTRUMENT)
             {
                 custom_instrument_hide (&gui_state, value > 0);
+                draw_name (value);
             }
 
             gui_state.element_update = false;

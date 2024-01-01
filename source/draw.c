@@ -11,25 +11,25 @@
 
 #include "../tile_data/pattern_index.h"
 
-const uint8_t keyboard_upper_active [12] = {
+const uint16_t keyboard_upper_active [12] = {
     PATTERN_KEYS + 10, PATTERN_KEYS + 18, PATTERN_KEYS + 12, PATTERN_KEYS + 18,
     PATTERN_KEYS + 12, PATTERN_KEYS + 10, PATTERN_KEYS + 18, PATTERN_KEYS + 12,
     PATTERN_KEYS + 18, PATTERN_KEYS + 12, PATTERN_KEYS + 18, PATTERN_KEYS + 12
 };
 
-const uint8_t keyboard_upper_inactive [12] = {
+const uint16_t keyboard_upper_inactive [12] = {
     PATTERN_KEYS + 2, PATTERN_KEYS + 8, PATTERN_KEYS + 4, PATTERN_KEYS + 8,
     PATTERN_KEYS + 4, PATTERN_KEYS + 2, PATTERN_KEYS + 8, PATTERN_KEYS + 4,
     PATTERN_KEYS + 8, PATTERN_KEYS + 4, PATTERN_KEYS + 8, PATTERN_KEYS + 4
 };
 
-const uint8_t keyboard_mid_active [12] = {
+const uint16_t keyboard_mid_active [12] = {
     PATTERN_KEYS + 10, PATTERN_KEYS + 20, PATTERN_KEYS + 12, PATTERN_KEYS + 20,
     PATTERN_KEYS + 12, PATTERN_KEYS + 10, PATTERN_KEYS + 20, PATTERN_KEYS + 12,
     PATTERN_KEYS + 20, PATTERN_KEYS + 12, PATTERN_KEYS + 20, PATTERN_KEYS + 12
 };
 
-const uint8_t keyboard_lower_inactive [12] = {
+const uint16_t keyboard_lower_inactive [12] = {
     PATTERN_KEYS + 2, PATTERN_KEYS + 3, PATTERN_KEYS + 4, PATTERN_KEYS + 5,
     PATTERN_KEYS + 4, PATTERN_KEYS + 2, PATTERN_KEYS + 6, PATTERN_KEYS + 4,
     PATTERN_KEYS + 7, PATTERN_KEYS + 4, PATTERN_KEYS + 5, PATTERN_KEYS + 4
@@ -51,7 +51,7 @@ const bool key_extends_right [12] = {
  */
 void draw_keyboard (void)
 {
-    uint8_t key_tile;
+    uint16_t key_tile;
 
     for (uint8_t col = 2; col <= 30; col++)
     {
@@ -89,7 +89,7 @@ void draw_keyboard (void)
  */
 void draw_keyboard_update (uint8_t key, bool active)
 {
-    uint8_t key_tile;
+    uint16_t key_tile;
 
     /* Top section */
     if (active)
@@ -316,6 +316,21 @@ void draw_reset (void)
     {
         SMS_loadTileMapArea (0, row, blank_line, 32, 1);
     }
+}
+
+
+/*
+ * Draw the title text, "YM2413 TestRom"
+ */
+void draw_title (void)
+{
+    uint16_t title [20] = { PATTERN_TITLE +  0, PATTERN_TITLE +  1, PATTERN_TITLE +  2, PATTERN_TITLE +  3,
+                            PATTERN_TITLE +  4, PATTERN_TITLE +  5, PATTERN_TITLE +  6, PATTERN_TITLE +  7,
+                            PATTERN_TITLE +  8, PATTERN_TITLE +  9, PATTERN_TITLE + 10, PATTERN_TITLE + 11,
+                            PATTERN_TITLE + 12, PATTERN_TITLE + 13, PATTERN_TITLE + 14, PATTERN_TITLE + 15,
+                            PATTERN_TITLE + 16, PATTERN_TITLE + 17, PATTERN_TITLE + 18, PATTERN_TITLE + 19 };
+
+    SMS_loadTileMapArea (11, 0, title, 10, 2);
 }
 
 

@@ -21,6 +21,9 @@ void draw_led (uint8_t x, uint8_t y, bool value);
 /* Draw the name of the selected instrument. */
 void draw_name (uint8_t instrument);
 
+/* Draw the title text, "YM2413 TestRom" */
+void draw_title (void);
+
 /* Draw a two digit value indicator. */
 void draw_value (uint8_t x, uint8_t y, uint8_t value);
 

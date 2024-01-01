@@ -292,6 +292,7 @@ void main (void)
     gui_state_t gui_state = { .current_element = ELEMENT_INSTRUMENT };
 
     draw_reset ();
+    draw_title ();
     draw_labels ();
     draw_keyboard ();
     draw_name (0);

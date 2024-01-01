@@ -293,6 +293,7 @@ void main (void)
 
     draw_reset ();
     draw_title ();
+    draw_footer ();
     draw_labels ();
     draw_keyboard ();
     draw_name (0);

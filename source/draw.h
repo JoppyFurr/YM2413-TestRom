@@ -3,6 +3,9 @@
  * Joppy Furr 2023
  */
 
+/* Draw the footer banner at the bottom of the screen. */
+void draw_footer (void);
+
 /* Initialise the keyboard display. */
 void draw_keyboard (void);
 

@@ -47,6 +47,24 @@ const bool key_extends_right [12] = {
 
 
 /*
+ * Draw the footer banner at the bottom of the screen.
+ */
+void draw_footer (void)
+{
+    const uint16_t name [5] = {
+        PATTERN_FOOTER + 0, PATTERN_FOOTER + 1, PATTERN_FOOTER + 2,
+        PATTERN_FOOTER + 3, PATTERN_FOOTER + 4
+    };
+    SMS_loadTileMapArea (1, 23, name, 5, 1);
+
+    const uint16_t version [3] = {
+        PATTERN_FOOTER + 5, PATTERN_FOOTER + 6, PATTERN_FOOTER + 7,
+    };
+    SMS_loadTileMapArea (29, 23, version, 3, 1);
+}
+
+
+/*
  * Initialise the keyboard display.
  */
 void draw_keyboard (void)

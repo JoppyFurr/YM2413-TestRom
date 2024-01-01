@@ -36,6 +36,7 @@ build_ym2413_test_rom ()
             tiles/empty.png \
             tiles/cursor.png \
             tiles/digits.png \
+            tiles/footer.png \
             tiles/keys.png \
             tiles/labels.png \
             tiles/led.png \

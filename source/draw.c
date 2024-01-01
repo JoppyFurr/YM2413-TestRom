@@ -196,15 +196,21 @@ void draw_labels (void)
         PATTERN_LABELS + 3, PATTERN_LABELS + 4, PATTERN_EMPTY,
         PATTERN_LABELS + 5, PATTERN_LABELS + 6
     };
-    SMS_loadTileMapArea (4, 3, inst_vol_sust, 8, 1);
+    SMS_loadTileMapArea (4, 4, inst_vol_sust, 8, 1);
 
-    /* Feedback, total-level */
-    const uint16_t feedback_tl [] = {
-        PATTERN_LABELS + 42, PATTERN_LABELS + 43, PATTERN_LABELS + 44, PATTERN_LABELS + 45,
-        PATTERN_LABELS + 46, PATTERN_LABELS + 47, PATTERN_LABELS + 59, PATTERN_LABELS + 60,
-        PATTERN_LABELS + 61, PATTERN_LABELS + 62, PATTERN_LABELS + 63, PATTERN_LABELS + 64
+    /* Feedback */
+    const uint16_t feedback [] = {
+        PATTERN_LABELS + 42, PATTERN_LABELS + 43, PATTERN_LABELS + 44,
+        PATTERN_LABELS + 59, PATTERN_LABELS + 60, PATTERN_LABELS + 61
     };
-    SMS_loadTileMapArea (25, 3, feedback_tl, 6, 2);
+    SMS_loadTileMapArea (21, 3, feedback, 3, 2);
+
+    /* Total-level */
+    const uint16_t total_level [] = {
+        PATTERN_LABELS + 45, PATTERN_LABELS + 46, PATTERN_LABELS + 47,
+        PATTERN_LABELS + 62, PATTERN_LABELS + 63, PATTERN_LABELS + 64
+    };
+    SMS_loadTileMapArea (27, 3, total_level, 3, 2);
 
     /* Multi */
     const uint16_t multi [] = {

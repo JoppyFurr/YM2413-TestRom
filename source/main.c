@@ -76,7 +76,7 @@ note_t notes [29] = {
 /*
  * Update the cursor position.
  */
-static void cursor_update (uint8_t x, uint8_t y, uint8_t height)
+static void cursor_update (uint8_t x, uint8_t y, uint8_t width, uint8_t height)
 {
     /* Clear any previous sprites */
     SMS_initSprites ();
@@ -87,19 +87,28 @@ static void cursor_update (uint8_t x, uint8_t y, uint8_t height)
         x = (x << 3) - 8;
         y = (y << 3) - 4;
 
-        SMS_addSprite (x,      y,      PATTERN_CURSOR + 0);
-        SMS_addSprite (x +  8, y,      PATTERN_CURSOR + 1);
-        SMS_addSprite (x + 16, y,      PATTERN_CURSOR + 2);
+        /* Top */
+        SMS_addSprite (x, y, PATTERN_CURSOR + 0);
+        for (uint8_t i = 1; i < width; i++)
+        {
+            SMS_addSprite (x + (i << 3), y, PATTERN_CURSOR + 1);
+        }
+        SMS_addSprite (x + (width << 3), y, PATTERN_CURSOR + 2);
 
+        /* Sides */
         for (uint8_t i = 1; i < height; i++)
         {
-            SMS_addSprite (x,      y + (i << 3), PATTERN_CURSOR + 3);
-            SMS_addSprite (x + 16, y + (i << 3), PATTERN_CURSOR + 5);
+            SMS_addSprite (x,                y + (i << 3), PATTERN_CURSOR + 3);
+            SMS_addSprite (x + (width << 3), y + (i << 3), PATTERN_CURSOR + 5);
         }
 
-        SMS_addSprite (x,      y + (height << 3), PATTERN_CURSOR + 6);
-        SMS_addSprite (x +  8, y + (height << 3), PATTERN_CURSOR + 7);
-        SMS_addSprite (x + 16, y + (height << 3), PATTERN_CURSOR + 8);
+        /* Bottom */
+        SMS_addSprite (x, y + (height << 3), PATTERN_CURSOR + 6);
+        for (uint8_t i = 1; i < width; i++)
+        {
+            SMS_addSprite (x + (i << 3), y + (height << 3), PATTERN_CURSOR + 7);
+        }
+        SMS_addSprite (x + (width << 3), y + (height << 3), PATTERN_CURSOR + 8);
     }
 
     SMS_copySpritestoSAT ();
@@ -311,6 +320,7 @@ void main (void)
 
     cursor_update (main_gui [gui_state.current_element].x,
                    main_gui [gui_state.current_element].y,
+                   main_gui [gui_state.current_element].width,
                    main_gui [gui_state.current_element].height);
 
     SMS_displayOn ();
@@ -344,6 +354,7 @@ void main (void)
         {
             cursor_update (main_gui [gui_state.current_element].x,
                            main_gui [gui_state.current_element].y,
+                           main_gui [gui_state.current_element].width,
                            main_gui [gui_state.current_element].height);
             gui_state.cursor_update = false;
         }

@@ -338,6 +338,30 @@ void draw_reset (void)
 
 
 /*
+ * Draw the Melody/Rhythm tabs.
+ */
+void draw_tabs (bool rhythm)
+{
+    const uint16_t melody_tiles [18] =  {
+        PATTERN_TABS +  0, PATTERN_TABS +  1, PATTERN_TABS +  2, PATTERN_TABS +  3,
+        PATTERN_TABS +  4, PATTERN_TABS +  5, PATTERN_TABS +  6, PATTERN_TABS +  7,
+        PATTERN_TABS +  8, PATTERN_TABS +  9, PATTERN_TABS + 10, PATTERN_TABS + 11,
+        PATTERN_TABS + 12, PATTERN_TABS + 13, PATTERN_TABS + 14, PATTERN_TABS + 15,
+        PATTERN_TABS + 16, PATTERN_TABS + 17
+    };
+    const uint16_t rhythm_tiles [18] =  {
+        PATTERN_TABS + 18, PATTERN_TABS + 19, PATTERN_TABS + 20, PATTERN_TABS + 21,
+        PATTERN_TABS + 22, PATTERN_TABS + 23, PATTERN_TABS + 24, PATTERN_TABS + 25,
+        PATTERN_TABS + 26, PATTERN_TABS + 27, PATTERN_TABS + 28, PATTERN_TABS + 29,
+        PATTERN_TABS + 30, PATTERN_TABS + 31, PATTERN_TABS + 32, PATTERN_TABS + 33,
+        PATTERN_TABS + 34, PATTERN_TABS + 35
+    };
+
+    SMS_loadTileMapArea (23, 0, rhythm ? rhythm_tiles : melody_tiles, 9, 2);
+}
+
+
+/*
  * Draw the title text, "YM2413 TestRom"
  */
 void draw_title (void)

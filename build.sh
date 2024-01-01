@@ -41,6 +41,7 @@ build_ym2413_test_rom ()
             tiles/labels.png \
             tiles/led.png \
             tiles/names.png \
+            tiles/tabs.png \
             tiles/title.png
     )
 

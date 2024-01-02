@@ -197,9 +197,9 @@ void draw_keyboard_update (uint8_t key, bool active)
 
 
 /*
- * Draw the control labels.
+ * Draw the control labels for melody mode.
  */
-void draw_labels (void)
+void draw_melody_labels (void)
 {
     /* Modulator / Carrier headings */
     const uint16_t mod_car_headings [] = {
@@ -297,7 +297,7 @@ void draw_led (uint8_t x, uint8_t y, bool value)
 /*
  * Draw the name of the selected instrument.
  */
-void draw_name (uint8_t instrument)
+void draw_instrument_name (uint8_t instrument)
 {
     const uint8_t bases [16] =   {0, 4, 7, 10, 13, 16, 20, 22, 26, 29, 32, 38, 44, 49, 57, 62};
     const uint8_t lengths [16] = {4, 3, 3,  3,  3,  4,  2,  4,  3,  3,  6,  6,  5,  8,  5,  7};
@@ -326,11 +326,11 @@ void draw_name (uint8_t instrument)
 /*
  * Fill the name table with tile-zero.
  */
-void draw_reset (void)
+void draw_reset (uint8_t from, uint8_t to)
 {
     uint16_t blank_line [32] = { 0 };
 
-    for (uint8_t row = 0; row < 24; row++)
+    for (uint8_t row = from; row < to; row++)
     {
         SMS_loadTileMapArea (0, row, blank_line, 32, 1);
     }

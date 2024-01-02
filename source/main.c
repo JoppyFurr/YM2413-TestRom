@@ -19,6 +19,7 @@
 
 typedef struct gui_state_s {
 
+    const gui_element_t *gui;
     element_id_t current_element;
     uint8_t keyboard_key;
 
@@ -124,7 +125,7 @@ static void custom_instrument_hide (gui_state_t *state, bool hide)
     {
         for (uint8_t i = ELEMENT_FEEDBACK; i < ELEMENT_KEYBOARD; i++)
         {
-            const gui_element_t *element = &main_gui [i];
+            const gui_element_t *element = &state->gui [i];
 
             if (element->type == TYPE_VALUE)
             {
@@ -140,7 +141,7 @@ static void custom_instrument_hide (gui_state_t *state, bool hide)
     {
         for (uint8_t i = ELEMENT_FEEDBACK; i < ELEMENT_KEYBOARD; i++)
         {
-            const gui_element_t *element = &main_gui [i];
+            const gui_element_t *element = &state->gui [i];
             uint16_t value = state->element_values [i];
 
             if (element->type == TYPE_VALUE)
@@ -159,38 +160,38 @@ static void custom_instrument_hide (gui_state_t *state, bool hide)
 /*
  * Move the cursor to select a different GUI element.
  */
-static void element_navigate (gui_state_t *gui_state, uint16_t key_pressed)
+static void element_navigate (gui_state_t *state, uint16_t key_pressed)
 {
-    if (gui_state->current_element == ELEMENT_KEYBOARD)
+    if (state->current_element == ELEMENT_KEYBOARD)
     {
         switch (key_pressed)
         {
             case PORT_A_KEY_UP:
-                if      (gui_state->keyboard_key < 6 ) gui_state->current_element = ELEMENT_CAR_MULTI;
-                else if (gui_state->keyboard_key < 9 ) gui_state->current_element = ELEMENT_CAR_ENVELOPE_TYPE;
-                else if (gui_state->keyboard_key < 12) gui_state->current_element = ELEMENT_CAR_AM;
-                else if (gui_state->keyboard_key < 15) gui_state->current_element = ELEMENT_CAR_WAVEFORM;
-                else if (gui_state->keyboard_key < 18) gui_state->current_element = ELEMENT_CAR_KSL;
-                else if (gui_state->keyboard_key < 21) gui_state->current_element = ELEMENT_CAR_ATTACK_RATE;
-                else if (gui_state->keyboard_key < 24) gui_state->current_element = ELEMENT_CAR_DECAY_RATE;
-                else if (gui_state->keyboard_key < 27) gui_state->current_element = ELEMENT_CAR_SUSTAIN_LEVEL;
-                else                        gui_state->current_element = ELEMENT_CAR_RELEASE_RATE;
-                gui_state->cursor_update = true;
-                gui_state->keyboard_key = 0;
-                gui_state->keyboard_update = true;
+                if      (state->keyboard_key < 6 ) state->current_element = ELEMENT_CAR_MULTI;
+                else if (state->keyboard_key < 9 ) state->current_element = ELEMENT_CAR_ENVELOPE_TYPE;
+                else if (state->keyboard_key < 12) state->current_element = ELEMENT_CAR_AM;
+                else if (state->keyboard_key < 15) state->current_element = ELEMENT_CAR_WAVEFORM;
+                else if (state->keyboard_key < 18) state->current_element = ELEMENT_CAR_KSL;
+                else if (state->keyboard_key < 21) state->current_element = ELEMENT_CAR_ATTACK_RATE;
+                else if (state->keyboard_key < 24) state->current_element = ELEMENT_CAR_DECAY_RATE;
+                else if (state->keyboard_key < 27) state->current_element = ELEMENT_CAR_SUSTAIN_LEVEL;
+                else                               state->current_element = ELEMENT_CAR_RELEASE_RATE;
+                state->cursor_update = true;
+                state->keyboard_key = 0;
+                state->keyboard_update = true;
                 break;
             case PORT_A_KEY_LEFT:
-                if (gui_state->keyboard_key > 1)
+                if (state->keyboard_key > 1)
                 {
-                    gui_state->keyboard_key--;
-                    gui_state->keyboard_update = true;
+                    state->keyboard_key--;
+                    state->keyboard_update = true;
                 }
                 break;
             case PORT_A_KEY_RIGHT:
-                if (gui_state->keyboard_key < 29)
+                if (state->keyboard_key < 29)
                 {
-                    gui_state->keyboard_key++;
-                    gui_state->keyboard_update = true;
+                    state->keyboard_key++;
+                    state->keyboard_update = true;
                 }
                 break;
             default:
@@ -199,12 +200,12 @@ static void element_navigate (gui_state_t *gui_state, uint16_t key_pressed)
     }
     else
     {
-        const gui_element_t *element = &main_gui [gui_state->current_element];
+        const gui_element_t *element = &state->gui [state->current_element];
 
         switch (key_pressed)
         {
             case PORT_A_KEY_UP:
-                gui_state->current_element = element->up;
+                state->current_element = element->up;
                 break;
 
             case PORT_A_KEY_DOWN:
@@ -215,24 +216,24 @@ static void element_navigate (gui_state_t *gui_state, uint16_t key_pressed)
                     SMS_copySpritestoSAT ();
 
                     /* Select a key */
-                    gui_state->keyboard_key = element->x - 1;
-                    gui_state->keyboard_update = true;
+                    state->keyboard_key = element->x - 1;
+                    state->keyboard_update = true;
                 }
-                gui_state->current_element = element->down;
+                state->current_element = element->down;
                 break;
 
             case PORT_A_KEY_LEFT:
-                gui_state->current_element = element->left;
+                state->current_element = element->left;
                 break;
 
             case PORT_A_KEY_RIGHT:
-                gui_state->current_element = element->right;
+                state->current_element = element->right;
                 break;
 
             default:
                 break;
         }
-        gui_state->cursor_update = true;
+        state->cursor_update = true;
     }
 }
 
@@ -242,7 +243,7 @@ static void element_navigate (gui_state_t *gui_state, uint16_t key_pressed)
  */
 static void element_update (gui_state_t *state, uint16_t key_pressed)
 {
-    const gui_element_t *element = &main_gui [state->current_element];
+    const gui_element_t *element = &state->gui [state->current_element];
     uint16_t *value = &state->element_values [state->current_element];
 
     /* Ignore custom instrument parameters when the custom instrument isn't selected */
@@ -274,6 +275,54 @@ static void element_update (gui_state_t *state, uint16_t key_pressed)
 
 
 /*
+ * Configure the GUI for melody mode.
+ */
+static void melody_mode (gui_state_t *state)
+{
+    state->gui = melody_gui;
+    draw_tabs (false);
+
+    /* Clear rhythm area */
+    draw_reset (2, 23);
+
+    draw_melody_labels ();
+
+    /* Draw the GUI elements with their current values */
+    for (uint8_t i = ELEMENT_INSTRUMENT; i <= ELEMENT_SUSTAIN; i++)
+    {
+        const gui_element_t *element = &state->gui [i];
+        uint16_t value = state->element_values [i];
+
+        if (element->type == TYPE_VALUE)
+        {
+            draw_value (element->x, element->y, value);
+        }
+        else if (element->type == TYPE_LED)
+        {
+            draw_led (element->x, element->y, value);
+        }
+    }
+    custom_instrument_hide (state, state->element_values [ELEMENT_INSTRUMENT] > 0);
+
+    draw_keyboard ();
+    draw_instrument_name (0);
+}
+
+
+/*
+ * Configure the GUI for rhythm mode.
+ */
+void rhythm_mode (gui_state_t *state)
+{
+    state->gui = rhythm_gui;
+    draw_tabs (true);
+
+    /* Clear melody area */
+    draw_reset (2, 23);
+}
+
+
+/*
  * Entry point.
  */
 void main (void)
@@ -289,31 +338,18 @@ void main (void)
     SMS_copySpritestoSAT ();
     SMS_setBGScrollX (0xfc);
 
-    gui_state_t gui_state = { .current_element = ELEMENT_INSTRUMENT };
+    gui_state_t gui_state = { .gui = melody_gui, .current_element = ELEMENT_INSTRUMENT };
 
-    draw_reset ();
+    draw_reset (0, 24);
     draw_title ();
     draw_footer ();
-    draw_tabs (false);
-    draw_labels ();
-    draw_keyboard ();
-    draw_name (0);
 
-    /* Initialise GUI elements and register defaults */
-    for (uint8_t i = 0; i < ELEMENT_KEYBOARD; i++)
+    /* Initialise register defaults */
+    for (uint8_t i = ELEMENT_INSTRUMENT; i < ELEMENT_KEYBOARD; i++)
     {
-        const gui_element_t *element = &main_gui [i];
+        const gui_element_t *element = &melody_gui [i];
         uint16_t value = register_defaults [i];
         gui_state.element_values [i] = value;
-
-        if (element->type == TYPE_VALUE)
-        {
-            draw_value (element->x, element->y, value);
-        }
-        else if (element->type == TYPE_LED)
-        {
-            draw_led (element->x, element->y, value);
-        }
 
         if (element->callback)
         {
@@ -321,10 +357,12 @@ void main (void)
         }
     }
 
-    cursor_update (main_gui [gui_state.current_element].x,
-                   main_gui [gui_state.current_element].y,
-                   main_gui [gui_state.current_element].width,
-                   main_gui [gui_state.current_element].height);
+    melody_mode (&gui_state);
+
+    cursor_update (gui_state.gui [gui_state.current_element].x,
+                   gui_state.gui [gui_state.current_element].y,
+                   gui_state.gui [gui_state.current_element].width,
+                   gui_state.gui [gui_state.current_element].height);
 
     SMS_displayOn ();
 
@@ -355,10 +393,10 @@ void main (void)
 
         if (gui_state.cursor_update)
         {
-            cursor_update (main_gui [gui_state.current_element].x,
-                           main_gui [gui_state.current_element].y,
-                           main_gui [gui_state.current_element].width,
-                           main_gui [gui_state.current_element].height);
+            cursor_update (gui_state.gui [gui_state.current_element].x,
+                           gui_state.gui [gui_state.current_element].y,
+                           gui_state.gui [gui_state.current_element].width,
+                           gui_state.gui [gui_state.current_element].height);
             gui_state.cursor_update = false;
         }
 
@@ -391,7 +429,7 @@ void main (void)
 
         if (gui_state.element_update)
         {
-            const gui_element_t *element = &main_gui [gui_state.current_element];
+            const gui_element_t *element = &gui_state.gui [gui_state.current_element];
             uint16_t value = gui_state.element_values [gui_state.current_element];
 
             if (element->type == TYPE_VALUE)
@@ -412,7 +450,7 @@ void main (void)
             if (gui_state.current_element == ELEMENT_INSTRUMENT)
             {
                 custom_instrument_hide (&gui_state, value > 0);
-                draw_name (value);
+                draw_instrument_name (value);
             }
 
             gui_state.element_update = false;
@@ -428,6 +466,18 @@ void main (void)
             {
                 register_write_key_on (0);
             }
+        }
+
+        if (gui_state.current_element == ELEMENT_MELODY_TAB &&
+            gui_state.gui == rhythm_gui && key_pressed == PORT_A_KEY_1)
+        {
+            melody_mode (&gui_state);
+        }
+
+        if (gui_state.current_element == ELEMENT_RHYTHM_TAB &&
+            gui_state.gui == melody_gui && key_pressed == PORT_A_KEY_1)
+        {
+            rhythm_mode (&gui_state);
         }
     }
 }

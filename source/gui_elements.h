@@ -4,13 +4,20 @@
  */
 
 typedef enum element_type_e {
-    TYPE_VALUE = 0,
+    TYPE_TAB = 0,
+    TYPE_VALUE,
     TYPE_LED,
     TYPE_KEYBOARD
 } element_type_t;
 
 typedef enum element_id_e {
-    ELEMENT_INSTRUMENT = 0,
+
+    /* Tabs */
+    ELEMENT_MELODY_TAB = 0,
+    ELEMENT_RHYTHM_TAB,
+
+    /* Melody Mode elements */
+    ELEMENT_INSTRUMENT,
     ELEMENT_VOLUME,
     ELEMENT_SUSTAIN,
     ELEMENT_FEEDBACK,
@@ -62,19 +69,31 @@ typedef struct gui_element_s {
 } gui_element_t;
 
 
-static const gui_element_t main_gui [ELEMENT_COUNT] = {
+static const gui_element_t melody_gui [ELEMENT_COUNT] = {
+    [ELEMENT_MELODY_TAB] = {
+        .type = TYPE_TAB, .max = 1,
+        .x = 23, .y = 0, .width = 4, .height = 2,
+        .up   = ELEMENT_MELODY_TAB,         .down  = ELEMENT_TOTAL_LEVEL,
+        .left = ELEMENT_FEEDBACK,           .right = ELEMENT_RHYTHM_TAB
+    },
+    [ELEMENT_RHYTHM_TAB] = {
+        .type = TYPE_TAB, .max = 1,
+        .x = 27, .y = 0, .width = 5, .height = 2,
+        .up   = ELEMENT_RHYTHM_TAB,         .down  = ELEMENT_TOTAL_LEVEL,
+        .left = ELEMENT_MELODY_TAB,         .right = ELEMENT_RHYTHM_TAB
+    },
     [ELEMENT_INSTRUMENT] = {
         .type = TYPE_VALUE, .max = 15,
         .x = 4, .y = 2, .width = 2, .height = 3,
         .callback = register_write_instrument,
-        .up   = ELEMENT_INSTRUMENT,         .down  = ELEMENT_MOD_MULTI,
+        .up   = ELEMENT_MELODY_TAB,         .down  = ELEMENT_MOD_MULTI,
         .left = ELEMENT_INSTRUMENT,         .right = ELEMENT_VOLUME
     },
     [ELEMENT_VOLUME] = {
         .type = TYPE_VALUE, .max = 15,
         .x = 7, .y = 2, .width = 2, .height = 3,
         .callback = register_write_volume,
-        .up   = ELEMENT_VOLUME,             .down  = ELEMENT_MOD_KSR,
+        .up   = ELEMENT_MELODY_TAB,         .down  = ELEMENT_MOD_KSR,
         .left = ELEMENT_INSTRUMENT,         .right = ELEMENT_SUSTAIN
     },
     [ELEMENT_SUSTAIN] = {
@@ -88,14 +107,14 @@ static const gui_element_t main_gui [ELEMENT_COUNT] = {
         .type = TYPE_VALUE, .max = 7,
         .x = 19, .y = 3, .width = 4, .height = 2,
         .callback = register_write_feedback,
-        .up   = ELEMENT_FEEDBACK,           .down  = ELEMENT_MOD_ATTACK_RATE,
+        .up   = ELEMENT_MELODY_TAB,         .down  = ELEMENT_MOD_ATTACK_RATE,
         .left = ELEMENT_SUSTAIN,            .right = ELEMENT_TOTAL_LEVEL
     },
     [ELEMENT_TOTAL_LEVEL] = {
         .type = TYPE_VALUE, .max = 63,
         .x = 25, .y = 3, .width = 5, .height = 2,
         .callback = register_write_total_level,
-        .up   = ELEMENT_TOTAL_LEVEL,        .down  = ELEMENT_MOD_SUSTAIN_LEVEL,
+        .up   = ELEMENT_RHYTHM_TAB,         .down  = ELEMENT_MOD_SUSTAIN_LEVEL,
         .left = ELEMENT_FEEDBACK,           .right = ELEMENT_TOTAL_LEVEL
     },
     [ELEMENT_MOD_MULTI] = {
@@ -257,4 +276,19 @@ static const gui_element_t main_gui [ELEMENT_COUNT] = {
         .down = ELEMENT_KEYBOARD,
         .left = ELEMENT_KEYBOARD,           .right = ELEMENT_KEYBOARD
     }
+};
+
+static const gui_element_t rhythm_gui [ELEMENT_COUNT] = {
+    [ELEMENT_MELODY_TAB] = {
+        .type = TYPE_TAB, .max = 1,
+        .x = 23, .y = 0, .width = 4, .height = 2,
+        .up   = ELEMENT_MELODY_TAB,         .down  = ELEMENT_MELODY_TAB,
+        .left = ELEMENT_MELODY_TAB,         .right = ELEMENT_RHYTHM_TAB
+    },
+    [ELEMENT_RHYTHM_TAB] = {
+        .type = TYPE_TAB, .max = 1,
+        .x = 27, .y = 0, .width = 5, .height = 2,
+        .up   = ELEMENT_RHYTHM_TAB,         .down  = ELEMENT_RHYTHM_TAB,
+        .left = ELEMENT_MELODY_TAB,         .right = ELEMENT_RHYTHM_TAB
+    },
 };

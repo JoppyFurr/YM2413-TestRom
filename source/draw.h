@@ -13,16 +13,16 @@ void draw_keyboard (void);
 void draw_keyboard_update (uint8_t key, bool active);
 
 /* Fill the name table with tile-zero. */
-void draw_reset (void);
+void draw_reset (uint8_t from, uint8_t to);
 
-/* Draw the control labels. */
-void draw_labels (void);
+/* Draw the control labels for melody mode. */
+void draw_melody_labels (void);
 
 /* Draw an LED indicator. */
 void draw_led (uint8_t x, uint8_t y, bool value);
 
 /* Draw the name of the selected instrument. */
-void draw_name (uint8_t instrument);
+void draw_instrument_name (uint8_t instrument);
 
 /* Draw the Melody/Rhythm tabs. */
 void draw_tabs (bool rhythm);

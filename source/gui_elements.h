@@ -6,7 +6,9 @@
 typedef enum element_type_e {
     TYPE_TAB = 0,
     TYPE_VALUE,
+    TYPE_VALUE_WIDE,
     TYPE_LED,
+    TYPE_BUTTON,
     TYPE_KEYBOARD
 } element_type_t;
 
@@ -45,6 +47,25 @@ typedef enum element_id_e {
     ELEMENT_CAR_SUSTAIN_LEVEL,
     ELEMENT_CAR_RELEASE_RATE,
     ELEMENT_KEYBOARD,
+
+    /* Rhythm Mode elements */
+    ELEMENT_CH6_BLOCK,
+    ELEMENT_CH6_FNUM,
+    ELEMENT_CH7_BLOCK,
+    ELEMENT_CH7_FNUM,
+    ELEMENT_CH8_BLOCK,
+    ELEMENT_CH8_FNUM,
+    ELEMENT_BD_VOLUME,
+    ELEMENT_BD_BUTTON,
+    ELEMENT_HH_VOLUME,
+    ELEMENT_HH_BUTTON,
+    ELEMENT_SD_VOLUME,
+    ELEMENT_SD_BUTTON,
+    ELEMENT_TT_VOLUME,
+    ELEMENT_TT_BUTTON,
+    ELEMENT_TC_VOLUME,
+    ELEMENT_TC_BUTTON,
+
     ELEMENT_COUNT
 } element_id_t;
 
@@ -100,7 +121,7 @@ static const gui_element_t melody_gui [ELEMENT_COUNT] = {
         .type = TYPE_LED, .max = 1,
         .x = 10, .y = 3, .width = 2, .height = 2,
         .callback = register_write_sustain,
-        .up   = ELEMENT_SUSTAIN,            .down  = ELEMENT_MOD_VIBRATO,
+        .up   = ELEMENT_MELODY_TAB,         .down  = ELEMENT_MOD_VIBRATO,
         .left = ELEMENT_VOLUME,             .right = ELEMENT_FEEDBACK
     },
     [ELEMENT_FEEDBACK] = {
@@ -282,13 +303,109 @@ static const gui_element_t rhythm_gui [ELEMENT_COUNT] = {
     [ELEMENT_MELODY_TAB] = {
         .type = TYPE_TAB, .max = 1,
         .x = 23, .y = 0, .width = 4, .height = 2,
-        .up   = ELEMENT_MELODY_TAB,         .down  = ELEMENT_MELODY_TAB,
-        .left = ELEMENT_MELODY_TAB,         .right = ELEMENT_RHYTHM_TAB
+        .up   = ELEMENT_MELODY_TAB,         .down  = ELEMENT_BD_BUTTON,
+        .left = ELEMENT_BD_BUTTON,          .right = ELEMENT_RHYTHM_TAB
     },
     [ELEMENT_RHYTHM_TAB] = {
         .type = TYPE_TAB, .max = 1,
         .x = 27, .y = 0, .width = 5, .height = 2,
-        .up   = ELEMENT_RHYTHM_TAB,         .down  = ELEMENT_RHYTHM_TAB,
+        .up   = ELEMENT_RHYTHM_TAB,         .down  = ELEMENT_BD_BUTTON,
         .left = ELEMENT_MELODY_TAB,         .right = ELEMENT_RHYTHM_TAB
+    },
+    [ELEMENT_CH6_BLOCK] = {
+        .type = TYPE_VALUE, .max = 7,
+        .x = 6, .y = 4, .width = 2, .height = 3,
+        .up   = ELEMENT_MELODY_TAB,         .down  = ELEMENT_CH7_BLOCK,
+        .left = ELEMENT_CH6_BLOCK,          .right = ELEMENT_CH6_FNUM
+    },
+    [ELEMENT_CH6_FNUM] = {
+        .type = TYPE_VALUE_WIDE, .max = 511,
+        .x = 9, .y = 4, .width = 3, .height = 3,
+        .up   = ELEMENT_MELODY_TAB,         .down  = ELEMENT_CH7_FNUM,
+        .left = ELEMENT_CH6_BLOCK,          .right = ELEMENT_BD_VOLUME
+    },
+    [ELEMENT_CH7_BLOCK] = {
+        .x = 6, .y = 10, .width = 2, .height = 3,
+        .type = TYPE_VALUE, .max = 7,
+        .up   = ELEMENT_CH6_BLOCK,          .down  = ELEMENT_CH8_BLOCK,
+        .left = ELEMENT_CH7_BLOCK,          .right = ELEMENT_CH7_FNUM
+    },
+    [ELEMENT_CH7_FNUM] = {
+        .type = TYPE_VALUE_WIDE, .max = 511,
+        .x = 9, .y = 10, .width = 3, .height = 3,
+        .up   = ELEMENT_CH6_FNUM,           .down  = ELEMENT_CH8_FNUM,
+        .left = ELEMENT_CH7_BLOCK,          .right = ELEMENT_SD_VOLUME
+    },
+    [ELEMENT_CH8_BLOCK] = {
+        .x = 6, .y = 18, .width = 2, .height = 3,
+        .type = TYPE_VALUE, .max = 7,
+        .up   = ELEMENT_CH7_BLOCK,          .down  = ELEMENT_CH8_BLOCK,
+        .left = ELEMENT_CH8_BLOCK,          .right = ELEMENT_CH8_FNUM
+    },
+    [ELEMENT_CH8_FNUM] = {
+        .type = TYPE_VALUE_WIDE, .max = 511,
+        .x = 9, .y = 18, .width = 3, .height = 3,
+        .up   = ELEMENT_CH7_FNUM,           .down  = ELEMENT_CH8_FNUM,
+        .left = ELEMENT_CH8_BLOCK,          .right = ELEMENT_TC_VOLUME
+    },
+    [ELEMENT_BD_VOLUME] = {
+        .type = TYPE_VALUE, .max = 15,
+        .x = 15, .y = 4, .width = 2, .height = 3,
+        .up   = ELEMENT_MELODY_TAB,         .down  = ELEMENT_HH_VOLUME,
+        .left = ELEMENT_CH6_FNUM,           .right = ELEMENT_BD_BUTTON
+    },
+    [ELEMENT_BD_BUTTON] = {
+        .type = TYPE_BUTTON, .max = 1,
+        .x = 19, .y = 4, .width = 2, .height = 2,
+        .up   = ELEMENT_MELODY_TAB,         .down  = ELEMENT_HH_BUTTON,
+        .left = ELEMENT_BD_VOLUME,          .right = ELEMENT_BD_BUTTON
+    },
+    [ELEMENT_HH_VOLUME] = {
+        .type = TYPE_VALUE, .max = 15,
+        .x = 15, .y = 8, .width = 2, .height = 3,
+        .up   = ELEMENT_BD_VOLUME,          .down  = ELEMENT_SD_VOLUME,
+        .left = ELEMENT_CH7_FNUM,           .right = ELEMENT_HH_BUTTON
+    },
+    [ELEMENT_HH_BUTTON] = {
+        .type = TYPE_BUTTON, .max = 1,
+        .x = 19, .y = 8, .width = 2, .height = 2,
+        .up   = ELEMENT_BD_BUTTON,          .down  = ELEMENT_SD_BUTTON,
+        .left = ELEMENT_HH_VOLUME,          .right = ELEMENT_HH_BUTTON
+    },
+    [ELEMENT_SD_VOLUME] = {
+        .type = TYPE_VALUE, .max = 15,
+        .x = 15, .y = 12, .width = 2, .height = 3,
+        .up   = ELEMENT_HH_VOLUME,          .down  = ELEMENT_TT_VOLUME,
+        .left = ELEMENT_CH7_FNUM,           .right = ELEMENT_SD_BUTTON
+    },
+    [ELEMENT_SD_BUTTON] = {
+        .type = TYPE_BUTTON, .max = 1,
+        .x = 19, .y = 12, .width = 2, .height = 2,
+        .up   = ELEMENT_HH_BUTTON,          .down  = ELEMENT_TT_BUTTON,
+        .left = ELEMENT_SD_VOLUME,          .right = ELEMENT_SD_BUTTON
+    },
+    [ELEMENT_TT_VOLUME] = {
+        .type = TYPE_VALUE, .max = 15,
+        .x = 15, .y = 16, .width = 2, .height = 3,
+        .up   = ELEMENT_SD_VOLUME,          .down  = ELEMENT_TC_VOLUME,
+        .left = ELEMENT_CH8_FNUM,           .right = ELEMENT_TT_BUTTON
+    },
+    [ELEMENT_TT_BUTTON] = {
+        .type = TYPE_BUTTON, .max = 1,
+        .x = 19, .y = 16, .width = 2, .height = 2,
+        .up   = ELEMENT_SD_BUTTON,          .down  = ELEMENT_TC_BUTTON,
+        .left = ELEMENT_TT_VOLUME,          .right = ELEMENT_TT_BUTTON
+    },
+    [ELEMENT_TC_VOLUME] = {
+        .type = TYPE_VALUE, .max = 15,
+        .x = 15, .y = 20, .width = 2, .height = 3,
+        .up   = ELEMENT_TT_VOLUME,          .down  = ELEMENT_TC_VOLUME,
+        .left = ELEMENT_CH8_FNUM,           .right = ELEMENT_TC_BUTTON
+    },
+    [ELEMENT_TC_BUTTON] = {
+        .type = TYPE_BUTTON, .max = 1,
+        .x = 19, .y = 20, .width = 2, .height = 2,
+        .up   = ELEMENT_TT_BUTTON,          .down  = ELEMENT_TC_BUTTON,
+        .left = ELEMENT_TC_VOLUME,          .right = ELEMENT_TC_BUTTON
     },
 };

@@ -253,7 +253,7 @@ static void element_update (gui_state_t *state, uint16_t key_pressed)
         return;
     }
 
-    if (element->type == TYPE_VALUE)
+    if (element->type == TYPE_VALUE || element->type == TYPE_VALUE_WIDE)
     {
         if (key_pressed == PORT_A_KEY_1 && *value > 0)
         {
@@ -319,6 +319,28 @@ void rhythm_mode (gui_state_t *state)
 
     /* Clear melody area */
     draw_reset (2, 23);
+
+    draw_rhythm_labels ();
+
+    /* Draw the GUI elements with their current values */
+    for (uint8_t i = ELEMENT_CH6_BLOCK; i <= ELEMENT_TC_BUTTON; i++)
+    {
+        const gui_element_t *element = &state->gui [i];
+        uint16_t value = state->element_values [i];
+
+        if (element->type == TYPE_VALUE)
+        {
+            draw_value (element->x, element->y, value);
+        }
+        else if (element->type == TYPE_VALUE_WIDE)
+        {
+            draw_value_wide (element->x, element->y, value);
+        }
+        else if (element->type == TYPE_BUTTON)
+        {
+            draw_button (element->x, element->y, value);
+        }
+    }
 }
 
 
@@ -435,6 +457,10 @@ void main (void)
             if (element->type == TYPE_VALUE)
             {
                 draw_value (element->x, element->y, value);
+            }
+            else if (element->type == TYPE_VALUE_WIDE)
+            {
+                draw_value_wide (element->x, element->y, value);
             }
             else if (element->type == TYPE_LED)
             {

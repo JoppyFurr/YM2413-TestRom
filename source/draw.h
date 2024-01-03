@@ -3,6 +3,9 @@
  * Joppy Furr 2023
  */
 
+/* Draw a button indicator. */
+void draw_button (uint8_t x, uint8_t y, bool value);
+
 /* Draw the footer banner at the bottom of the screen. */
 void draw_footer (void);
 
@@ -18,6 +21,9 @@ void draw_reset (uint8_t from, uint8_t to);
 /* Draw the control labels for melody mode. */
 void draw_melody_labels (void);
 
+/* Draw the control labels for rhythm mode. */
+void draw_rhythm_labels (void);
+
 /* Draw an LED indicator. */
 void draw_led (uint8_t x, uint8_t y, bool value);
 
@@ -32,6 +38,9 @@ void draw_title (void);
 
 /* Draw a two digit value indicator. */
 void draw_value (uint8_t x, uint8_t y, uint8_t value);
+
+/* Draw a three digit value indicator. */
+void draw_value_wide (uint8_t x, uint8_t y, uint16_t value);
 
 /* Draw a dimmed-out two digit value indicator. */
 void draw_value_hidden (uint8_t x, uint8_t y);

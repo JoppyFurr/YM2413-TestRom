@@ -315,96 +315,112 @@ static const gui_element_t rhythm_gui [ELEMENT_COUNT] = {
     [ELEMENT_CH6_BLOCK] = {
         .type = TYPE_VALUE, .max = 7,
         .x = 6, .y = 4, .width = 2, .height = 3,
+        .callback = register_write_ch6_block,
         .up   = ELEMENT_MELODY_TAB,         .down  = ELEMENT_CH7_BLOCK,
         .left = ELEMENT_CH6_BLOCK,          .right = ELEMENT_CH6_FNUM
     },
     [ELEMENT_CH6_FNUM] = {
         .type = TYPE_VALUE_WIDE, .max = 511,
         .x = 9, .y = 4, .width = 3, .height = 3,
+        .callback = register_write_ch6_fnum,
         .up   = ELEMENT_MELODY_TAB,         .down  = ELEMENT_CH7_FNUM,
         .left = ELEMENT_CH6_BLOCK,          .right = ELEMENT_BD_VOLUME
     },
     [ELEMENT_CH7_BLOCK] = {
         .x = 6, .y = 10, .width = 2, .height = 3,
         .type = TYPE_VALUE, .max = 7,
+        .callback = register_write_ch7_block,
         .up   = ELEMENT_CH6_BLOCK,          .down  = ELEMENT_CH8_BLOCK,
         .left = ELEMENT_CH7_BLOCK,          .right = ELEMENT_CH7_FNUM
     },
     [ELEMENT_CH7_FNUM] = {
         .type = TYPE_VALUE_WIDE, .max = 511,
         .x = 9, .y = 10, .width = 3, .height = 3,
+        .callback = register_write_ch7_fnum,
         .up   = ELEMENT_CH6_FNUM,           .down  = ELEMENT_CH8_FNUM,
         .left = ELEMENT_CH7_BLOCK,          .right = ELEMENT_SD_VOLUME
     },
     [ELEMENT_CH8_BLOCK] = {
         .x = 6, .y = 18, .width = 2, .height = 3,
         .type = TYPE_VALUE, .max = 7,
+        .callback = register_write_ch8_block,
         .up   = ELEMENT_CH7_BLOCK,          .down  = ELEMENT_CH8_BLOCK,
         .left = ELEMENT_CH8_BLOCK,          .right = ELEMENT_CH8_FNUM
     },
     [ELEMENT_CH8_FNUM] = {
         .type = TYPE_VALUE_WIDE, .max = 511,
         .x = 9, .y = 18, .width = 3, .height = 3,
+        .callback = register_write_ch8_fnum,
         .up   = ELEMENT_CH7_FNUM,           .down  = ELEMENT_CH8_FNUM,
         .left = ELEMENT_CH8_BLOCK,          .right = ELEMENT_TC_VOLUME
     },
     [ELEMENT_BD_VOLUME] = {
         .type = TYPE_VALUE, .max = 15,
         .x = 15, .y = 4, .width = 2, .height = 3,
+        .callback = register_write_bd_volume,
         .up   = ELEMENT_MELODY_TAB,         .down  = ELEMENT_HH_VOLUME,
         .left = ELEMENT_CH6_FNUM,           .right = ELEMENT_BD_BUTTON
     },
     [ELEMENT_BD_BUTTON] = {
         .type = TYPE_BUTTON, .max = 1,
         .x = 19, .y = 4, .width = 2, .height = 2,
+        .callback = register_write_bd_key,
         .up   = ELEMENT_MELODY_TAB,         .down  = ELEMENT_HH_BUTTON,
         .left = ELEMENT_BD_VOLUME,          .right = ELEMENT_BD_BUTTON
     },
     [ELEMENT_HH_VOLUME] = {
         .type = TYPE_VALUE, .max = 15,
         .x = 15, .y = 8, .width = 2, .height = 3,
+        .callback = register_write_hh_volume,
         .up   = ELEMENT_BD_VOLUME,          .down  = ELEMENT_SD_VOLUME,
         .left = ELEMENT_CH7_FNUM,           .right = ELEMENT_HH_BUTTON
     },
     [ELEMENT_HH_BUTTON] = {
         .type = TYPE_BUTTON, .max = 1,
         .x = 19, .y = 8, .width = 2, .height = 2,
+        .callback = register_write_hh_key,
         .up   = ELEMENT_BD_BUTTON,          .down  = ELEMENT_SD_BUTTON,
         .left = ELEMENT_HH_VOLUME,          .right = ELEMENT_HH_BUTTON
     },
     [ELEMENT_SD_VOLUME] = {
         .type = TYPE_VALUE, .max = 15,
         .x = 15, .y = 12, .width = 2, .height = 3,
+        .callback = register_write_sd_volume,
         .up   = ELEMENT_HH_VOLUME,          .down  = ELEMENT_TT_VOLUME,
         .left = ELEMENT_CH7_FNUM,           .right = ELEMENT_SD_BUTTON
     },
     [ELEMENT_SD_BUTTON] = {
         .type = TYPE_BUTTON, .max = 1,
         .x = 19, .y = 12, .width = 2, .height = 2,
+        .callback = register_write_sd_key,
         .up   = ELEMENT_HH_BUTTON,          .down  = ELEMENT_TT_BUTTON,
         .left = ELEMENT_SD_VOLUME,          .right = ELEMENT_SD_BUTTON
     },
     [ELEMENT_TT_VOLUME] = {
         .type = TYPE_VALUE, .max = 15,
         .x = 15, .y = 16, .width = 2, .height = 3,
+        .callback = register_write_tt_volume,
         .up   = ELEMENT_SD_VOLUME,          .down  = ELEMENT_TC_VOLUME,
         .left = ELEMENT_CH8_FNUM,           .right = ELEMENT_TT_BUTTON
     },
     [ELEMENT_TT_BUTTON] = {
         .type = TYPE_BUTTON, .max = 1,
         .x = 19, .y = 16, .width = 2, .height = 2,
+        .callback = register_write_tt_key,
         .up   = ELEMENT_SD_BUTTON,          .down  = ELEMENT_TC_BUTTON,
         .left = ELEMENT_TT_VOLUME,          .right = ELEMENT_TT_BUTTON
     },
     [ELEMENT_TC_VOLUME] = {
         .type = TYPE_VALUE, .max = 15,
         .x = 15, .y = 20, .width = 2, .height = 3,
+        .callback = register_write_tc_volume,
         .up   = ELEMENT_TT_VOLUME,          .down  = ELEMENT_TC_VOLUME,
         .left = ELEMENT_CH8_FNUM,           .right = ELEMENT_TC_BUTTON
     },
     [ELEMENT_TC_BUTTON] = {
         .type = TYPE_BUTTON, .max = 1,
         .x = 19, .y = 20, .width = 2, .height = 2,
+        .callback = register_write_tc_key,
         .up   = ELEMENT_TT_BUTTON,          .down  = ELEMENT_TC_BUTTON,
         .left = ELEMENT_TC_VOLUME,          .right = ELEMENT_TC_BUTTON
     },

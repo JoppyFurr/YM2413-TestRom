@@ -19,9 +19,19 @@ typedef struct instrument_regs_s {
 } instrument_regs_t;
 
 typedef struct channel_regs_s {
+    uint8_t r0e;
     uint8_t r10;
+    uint8_t r16;
+    uint8_t r17;
+    uint8_t r18;
     uint8_t r20;
+    uint8_t r26;
+    uint8_t r27;
+    uint8_t r28;
     uint8_t r30;
+    uint8_t r36;
+    uint8_t r37;
+    uint8_t r38;
 } channel_regs_t;
 
 static instrument_regs_t instrument_regs = { 0 };
@@ -33,9 +43,38 @@ static channel_regs_t channel_regs = { 0 };
  */
 static void register_write (uint8_t addr, uint8_t value)
 {
-    /* TODO: Do we need to enforce a delay between writes? */
     ym2413_addr = addr;
+    __asm
+        /* 12 cycle delay after setting address. */
+        nop
+        nop
+        nop
+    __endasm;
     ym2413_data = value;
+    __asm
+        /* 84 cycle delay after writing register. */
+        nop
+        nop
+        nop
+        nop
+        nop
+        nop
+        nop
+        nop
+        nop
+        nop
+        nop
+        nop
+        nop
+        nop
+        nop
+        nop
+        nop
+        nop
+        nop
+        nop
+        nop
+    __endasm;
 }
 
 
@@ -370,7 +409,7 @@ void register_write_car_release_rate (uint16_t value)
 
 
 /*
- * Update the f-num and block registers.
+ * Update the melody f-num and block registers.
  */
 void register_write_fnum_block (uint16_t fnum, uint8_t block)
 {
@@ -381,6 +420,202 @@ void register_write_fnum_block (uint16_t fnum, uint8_t block)
     channel_regs.r20 |= (fnum  >> 8) & 0x01;
     channel_regs.r20 |= (block << 1) & 0x0e;
     register_write (0x20, channel_regs.r20);
+}
+
+
+/*
+ * Write the bass-drum block register.
+ */
+void register_write_ch6_block (uint16_t value)
+{
+    channel_regs.r26 &= 0xf1;
+    channel_regs.r26 |= (value << 1) & 0x0e;
+    register_write (0x26, channel_regs.r26);
+}
+
+
+/*
+ * Write the bass-drum fnum register.
+ */
+void register_write_ch6_fnum (uint16_t value)
+{
+    channel_regs.r16 = value;
+    register_write (0x16, channel_regs.r16);
+
+    channel_regs.r26 &= 0xfe;
+    channel_regs.r26 |= (value >> 8) & 0x01;
+    register_write (0x26, channel_regs.r26);
+}
+
+
+/*
+ * Write the high-hat / snare-drum block register.
+ */
+void register_write_ch7_block (uint16_t value)
+{
+    channel_regs.r27 &= 0xf1;
+    channel_regs.r27 |= (value << 1) & 0x0e;
+    register_write (0x27, channel_regs.r27);
+}
+
+
+/*
+ * Write the high-hat / snare-drum fnum register.
+ */
+void register_write_ch7_fnum (uint16_t value)
+{
+    channel_regs.r17 = value;
+    register_write (0x17, channel_regs.r17);
+
+    channel_regs.r27 &= 0xfe;
+    channel_regs.r27 |= (value >> 8) & 0x01;
+    register_write (0x27, channel_regs.r27);
+}
+
+
+/*
+ * Write the tom-tom / top-cymbal block register.
+ */
+void register_write_ch8_block (uint16_t value)
+{
+    channel_regs.r28 &= 0xf1;
+    channel_regs.r28 |= (value << 1) & 0x0e;
+    register_write (0x28, channel_regs.r28);
+}
+
+
+/*
+ * Write the tom-tom / top-cymbal fnum register.
+ */
+void register_write_ch8_fnum (uint16_t value)
+{
+    channel_regs.r18 = value;
+    register_write (0x18, channel_regs.r18);
+
+    channel_regs.r28 &= 0xfe;
+    channel_regs.r28 |= (value >> 8) & 0x01;
+    register_write (0x28, channel_regs.r28);
+}
+
+
+/*
+ * Write the bass-drum volume.
+ */
+void register_write_bd_volume (uint16_t value)
+{
+    channel_regs.r36 &= 0xf0;
+    channel_regs.r36 |= value & 0x0f;
+    register_write (0x36, channel_regs.r36);
+}
+
+
+/*
+ * Write the high-hat volume.
+ */
+void register_write_hh_volume (uint16_t value)
+{
+    channel_regs.r37 &= 0x0f;
+    channel_regs.r37 |= (value << 4) & 0xf0;
+    register_write (0x37, channel_regs.r37);
+}
+
+
+/*
+ * Write the snare-drum volume.
+ */
+void register_write_sd_volume (uint16_t value)
+{
+    channel_regs.r37 &= 0xf0;
+    channel_regs.r37 |= value & 0x0f;
+    register_write (0x37, channel_regs.r37);
+}
+
+
+/*
+ * Write the tom-tom volume.
+ */
+void register_write_tt_volume (uint16_t value)
+{
+    channel_regs.r38 &= 0x0f;
+    channel_regs.r38 |= (value << 4) & 0xf0;
+    register_write (0x38, channel_regs.r38);
+}
+
+
+/*
+ * Write the top-cymbal volume.
+ */
+void register_write_tc_volume (uint16_t value)
+{
+    channel_regs.r38 &= 0xf0;
+    channel_regs.r38 |= value & 0x0f;
+    register_write (0x38, channel_regs.r38);
+}
+
+
+/*
+ * Write the rhythm register to key the bass-drum.
+ */
+void register_write_rhythm_mode (uint16_t value)
+{
+    channel_regs.r0e &= 0xdf;
+    channel_regs.r0e |= (value << 5) & 0x20;
+    register_write (0x0e, channel_regs.r0e);
+}
+
+
+/*
+ * Write the rhythm register to key the bass-drum.
+ */
+void register_write_bd_key (uint16_t value)
+{
+    channel_regs.r0e &= 0xef;
+    channel_regs.r0e |= (value << 4) & 0x10;
+    register_write (0x0e, channel_regs.r0e);
+}
+
+
+/*
+ * Write the rhythm register to key the high-hat.
+ */
+void register_write_hh_key (uint16_t value)
+{
+    channel_regs.r0e &= 0xfe;
+    channel_regs.r0e |= value & 0x01;
+    register_write (0x0e, channel_regs.r0e);
+}
+
+
+/*
+ * Write the rhythm register to key the snare-drum.
+ */
+void register_write_sd_key (uint16_t value)
+{
+    channel_regs.r0e &= 0xf7;
+    channel_regs.r0e |= (value << 3) & 0x08;
+    register_write (0x0e, channel_regs.r0e);
+}
+
+
+/*
+ * Write the rhythm register to key the tom-tom.
+ */
+void register_write_tt_key (uint16_t value)
+{
+    channel_regs.r0e &= 0xfb;
+    channel_regs.r0e |= (value << 2) & 0x04;
+    register_write (0x0e, channel_regs.r0e);
+}
+
+
+/*
+ * Write the rhythm register to key the top-cymbal.
+ */
+void register_write_tc_key (uint16_t value)
+{
+    channel_regs.r0e &= 0xfd;
+    channel_regs.r0e |= (value << 1) & 0x02;
+    register_write (0x0e, channel_regs.r0e);
 }
 
 

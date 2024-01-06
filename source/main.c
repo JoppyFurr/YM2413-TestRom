@@ -63,7 +63,23 @@ static const uint16_t register_defaults [ELEMENT_COUNT] = {
     [ELEMENT_CAR_ATTACK_RATE] = 15,
     [ELEMENT_CAR_DECAY_RATE] = 0,
     [ELEMENT_CAR_SUSTAIN_LEVEL] = 0,
-    [ELEMENT_CAR_RELEASE_RATE] = 0
+    [ELEMENT_CAR_RELEASE_RATE] = 0,
+    [ELEMENT_CH6_BLOCK] = 2,
+    [ELEMENT_CH6_FNUM] = 288,
+    [ELEMENT_CH7_BLOCK] = 2,
+    [ELEMENT_CH7_FNUM] = 336,
+    [ELEMENT_CH8_BLOCK] = 0,
+    [ELEMENT_CH8_FNUM] = 448,
+    [ELEMENT_BD_VOLUME] = 0,
+    [ELEMENT_BD_BUTTON] = 0,
+    [ELEMENT_HH_VOLUME] = 0,
+    [ELEMENT_HH_BUTTON] = 0,
+    [ELEMENT_SD_VOLUME] = 0,
+    [ELEMENT_SD_BUTTON] = 0,
+    [ELEMENT_TT_VOLUME] = 0,
+    [ELEMENT_TT_BUTTON] = 0,
+    [ELEMENT_TC_VOLUME] = 0,
+    [ELEMENT_TC_BUTTON] = 0
 };
 
 note_t notes [29] = {
@@ -158,6 +174,36 @@ static void custom_instrument_hide (gui_state_t *state, bool hide)
 
 
 /*
+ * Push the in-ram copy of an element's value to the GUI and run its callback
+ * to push the value to the ym2413.
+ */
+static void element_update (const gui_element_t *element, uint16_t value)
+{
+    if (element->type == TYPE_VALUE)
+    {
+        draw_value (element->x, element->y, value);
+    }
+    else if (element->type == TYPE_VALUE_WIDE)
+    {
+        draw_value_wide (element->x, element->y, value);
+    }
+    else if (element->type == TYPE_LED)
+    {
+        draw_led (element->x, element->y, value);
+    }
+    else if (element->type == TYPE_BUTTON)
+    {
+        draw_button (element->x, element->y, value);
+    }
+
+    if (element->callback)
+    {
+        element->callback (value);
+    }
+}
+
+
+/*
  * Move the cursor to select a different GUI element.
  */
 static void element_navigate (gui_state_t *state, uint16_t key_pressed)
@@ -200,6 +246,7 @@ static void element_navigate (gui_state_t *state, uint16_t key_pressed)
     }
     else
     {
+        uint8_t element_was = state->current_element;
         const gui_element_t *element = &state->gui [state->current_element];
 
         switch (key_pressed)
@@ -233,15 +280,27 @@ static void element_navigate (gui_state_t *state, uint16_t key_pressed)
             default:
                 break;
         }
+
+        /* "BUTTON" elements turn off when unselected.
+         * Note that our pointer, 'element', still points at the previous element */
+        if (state->current_element != element_was)
+        {
+            if (element->type == TYPE_BUTTON)
+            {
+                state->element_values [element_was] = 0;
+                element_update (element, 0);
+            }
+        }
+
         state->cursor_update = true;
     }
 }
 
 
 /*
- * Update the value of an parameter when a button is pressed.
+ * Update the in-ram value of an element when a button is pressed or released.
  */
-static void element_update (gui_state_t *state, uint16_t key_pressed)
+static void element_input (gui_state_t *state, uint16_t key_pressed, int16_t key_released)
 {
     const gui_element_t *element = &state->gui [state->current_element];
     uint16_t *value = &state->element_values [state->current_element];
@@ -268,7 +327,22 @@ static void element_update (gui_state_t *state, uint16_t key_pressed)
     }
     else if (element->type == TYPE_LED)
     {
-        *value ^= 0x0001;
+        if (key_pressed)
+        {
+            *value ^= 0x0001;
+            state->element_update = true;
+        }
+    }
+    else if (element->type == TYPE_BUTTON)
+    {
+        if (key_pressed)
+        {
+            *value = 1;
+        }
+        else if (key_released)
+        {
+            *value = 0;
+        }
         state->element_update = true;
     }
 }
@@ -366,11 +440,23 @@ void main (void)
     draw_title ();
     draw_footer ();
 
+    /* Put the chip into rhythm mode */
+    register_write_rhythm_mode (1);
+
     /* Initialise register defaults */
-    for (uint8_t i = ELEMENT_INSTRUMENT; i < ELEMENT_KEYBOARD; i++)
+    for (uint8_t i = ELEMENT_INSTRUMENT; i < ELEMENT_TC_BUTTON; i++)
     {
-        const gui_element_t *element = &melody_gui [i];
+        const gui_element_t *element;
         uint16_t value = register_defaults [i];
+
+        if (i <= ELEMENT_KEYBOARD)
+        {
+            element = &melody_gui [i];
+        }
+        else
+        {
+            element = &rhythm_gui [i];
+        }
         gui_state.element_values [i] = value;
 
         if (element->callback)
@@ -395,6 +481,7 @@ void main (void)
         uint16_t key_pressed = SMS_getKeysPressed ();
         uint16_t key_released = SMS_getKeysReleased ();
 
+        /* Navigation */
         switch (key_pressed)
         {
             case PORT_A_KEY_UP:
@@ -403,10 +490,14 @@ void main (void)
             case PORT_A_KEY_RIGHT:
                 element_navigate (&gui_state, key_pressed);
                 break;
+        }
 
+        /* Button input */
+        switch (key_pressed | key_released)
+        {
             case PORT_A_KEY_1:
             case PORT_A_KEY_2:
-                element_update (&gui_state, key_pressed);
+                element_input (&gui_state, key_pressed, key_released);
                 break;
 
             default:
@@ -454,23 +545,7 @@ void main (void)
             const gui_element_t *element = &gui_state.gui [gui_state.current_element];
             uint16_t value = gui_state.element_values [gui_state.current_element];
 
-            if (element->type == TYPE_VALUE)
-            {
-                draw_value (element->x, element->y, value);
-            }
-            else if (element->type == TYPE_VALUE_WIDE)
-            {
-                draw_value_wide (element->x, element->y, value);
-            }
-            else if (element->type == TYPE_LED)
-            {
-                draw_led (element->x, element->y, value);
-            }
-
-            if (element->callback)
-            {
-                element->callback (value);
-            }
+            element_update (element, value);
 
             /* Dim custom instrument settings when the custom instrument is not in use */
             if (gui_state.current_element == ELEMENT_INSTRUMENT)
@@ -482,28 +557,34 @@ void main (void)
             gui_state.element_update = false;
         }
 
-        if (gui_state.current_element == ELEMENT_KEYBOARD)
+        /* Melody-specific actions */
+        if (gui_state.gui == melody_gui)
         {
-            if (key_pressed == PORT_A_KEY_1)
+            if (gui_state.current_element == ELEMENT_KEYBOARD)
             {
-                register_write_key_on (1);
+                if (key_pressed == PORT_A_KEY_1)
+                {
+                    register_write_key_on (1);
+                }
+                else if (key_released == PORT_A_KEY_1)
+                {
+                    register_write_key_on (0);
+                }
             }
-            else if (key_released == PORT_A_KEY_1)
+
+            if (gui_state.current_element == ELEMENT_RHYTHM_TAB && key_pressed == PORT_A_KEY_1)
             {
-                register_write_key_on (0);
+                rhythm_mode (&gui_state);
             }
         }
 
-        if (gui_state.current_element == ELEMENT_MELODY_TAB &&
-            gui_state.gui == rhythm_gui && key_pressed == PORT_A_KEY_1)
+        /* Rhythm-specific actions */
+        else if (gui_state.gui == rhythm_gui)
         {
-            melody_mode (&gui_state);
-        }
-
-        if (gui_state.current_element == ELEMENT_RHYTHM_TAB &&
-            gui_state.gui == melody_gui && key_pressed == PORT_A_KEY_1)
-        {
-            rhythm_mode (&gui_state);
+            if (gui_state.current_element == ELEMENT_MELODY_TAB && key_pressed == PORT_A_KEY_1)
+            {
+                melody_mode (&gui_state);
+            }
         }
     }
 }

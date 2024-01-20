@@ -9,6 +9,9 @@
 
 #include "SMSlib.h"
 
+#define PORT_A_DPAD_MASK    (PORT_A_KEY_UP | PORT_A_KEY_DOWN | PORT_A_KEY_LEFT | PORT_A_KEY_RIGHT)
+#define PORT_A_KEY_MASK     (PORT_A_KEY_1 | PORT_A_KEY_2)
+
 #include "../tile_data/palette.h"
 #include "../tile_data/pattern.h"
 #include "../tile_data/pattern_index.h"
@@ -482,7 +485,7 @@ void main (void)
         uint16_t key_released = SMS_getKeysReleased ();
 
         /* Navigation */
-        switch (key_pressed)
+        switch (key_pressed & PORT_A_DPAD_MASK)
         {
             case PORT_A_KEY_UP:
             case PORT_A_KEY_DOWN:
@@ -493,7 +496,7 @@ void main (void)
         }
 
         /* Button input */
-        switch (key_pressed | key_released)
+        switch ((key_pressed | key_released) & PORT_A_KEY_MASK)
         {
             case PORT_A_KEY_1:
             case PORT_A_KEY_2:

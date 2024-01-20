@@ -7,6 +7,8 @@
 __sfr __at 0xf0 ym2413_addr;
 __sfr __at 0xf1 ym2413_data;
 
+#define SUSTAIN_BIT 0x20
+
 typedef struct instrument_regs_s {
     uint8_t r00;
     uint8_t r01;
@@ -424,6 +426,23 @@ void register_write_fnum_block (uint16_t fnum, uint8_t block)
 
 
 /*
+ * Write the bass-drum sustain register.
+ */
+void register_write_ch6_sustain (uint16_t value)
+{
+    if (value)
+    {
+        channel_regs.r26 |= SUSTAIN_BIT;
+    }
+    else
+    {
+        channel_regs.r26 &= ~SUSTAIN_BIT;
+    }
+    register_write (0x26, channel_regs.r26);
+}
+
+
+/*
  * Write the bass-drum block register.
  */
 void register_write_ch6_block (uint16_t value)
@@ -449,6 +468,23 @@ void register_write_ch6_fnum (uint16_t value)
 
 
 /*
+ * Write the high-hat / snare-drum sustain register.
+ */
+void register_write_ch7_sustain (uint16_t value)
+{
+    if (value)
+    {
+        channel_regs.r27 |= SUSTAIN_BIT;
+    }
+    else
+    {
+        channel_regs.r27 &= ~SUSTAIN_BIT;
+    }
+    register_write (0x27, channel_regs.r27);
+}
+
+
+/*
  * Write the high-hat / snare-drum block register.
  */
 void register_write_ch7_block (uint16_t value)
@@ -470,6 +506,23 @@ void register_write_ch7_fnum (uint16_t value)
     channel_regs.r27 &= 0xfe;
     channel_regs.r27 |= (value >> 8) & 0x01;
     register_write (0x27, channel_regs.r27);
+}
+
+
+/*
+ * Write the tom-tom / top-cymbal sustain register.
+ */
+void register_write_ch8_sustain (uint16_t value)
+{
+    if (value)
+    {
+        channel_regs.r28 |= SUSTAIN_BIT;
+    }
+    else
+    {
+        channel_regs.r28 &= ~SUSTAIN_BIT;
+    }
+    register_write (0x28, channel_regs.r28);
 }
 
 
@@ -622,7 +675,6 @@ void register_write_tc_key (uint16_t value)
 /*
  * Write the channel sustain bit.
  */
-#define SUSTAIN_BIT 0x20
 void register_write_sustain (uint16_t value)
 {
     if (value)

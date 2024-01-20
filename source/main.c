@@ -67,10 +67,13 @@ static const uint16_t register_defaults [ELEMENT_COUNT] = {
     [ELEMENT_CAR_DECAY_RATE] = 0,
     [ELEMENT_CAR_SUSTAIN_LEVEL] = 0,
     [ELEMENT_CAR_RELEASE_RATE] = 0,
+    [ELEMENT_CH6_SUSTAIN] = 0,
     [ELEMENT_CH6_BLOCK] = 2,
     [ELEMENT_CH6_FNUM] = 288,
+    [ELEMENT_CH7_SUSTAIN] = 0,
     [ELEMENT_CH7_BLOCK] = 2,
     [ELEMENT_CH7_FNUM] = 336,
+    [ELEMENT_CH8_SUSTAIN] = 0,
     [ELEMENT_CH8_BLOCK] = 0,
     [ELEMENT_CH8_FNUM] = 448,
     [ELEMENT_BD_VOLUME] = 0,
@@ -400,7 +403,7 @@ void rhythm_mode (gui_state_t *state)
     draw_rhythm_labels ();
 
     /* Draw the GUI elements with their current values */
-    for (uint8_t i = ELEMENT_CH6_BLOCK; i <= ELEMENT_TC_BUTTON; i++)
+    for (uint8_t i = ELEMENT_CH6_SUSTAIN; i <= ELEMENT_TC_BUTTON; i++)
     {
         const gui_element_t *element = &state->gui [i];
         uint16_t value = state->element_values [i];
@@ -412,6 +415,10 @@ void rhythm_mode (gui_state_t *state)
         else if (element->type == TYPE_VALUE_WIDE)
         {
             draw_value_wide (element->x, element->y, value);
+        }
+        else if (element->type == TYPE_LED)
+        {
+            draw_led (element->x, element->y, value);
         }
         else if (element->type == TYPE_BUTTON)
         {

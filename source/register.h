@@ -90,17 +90,26 @@ void register_write_instrument (uint16_t value);
 /* Write the volume register. */
 void register_write_volume (uint16_t value);
 
+/* Write the bass-drum sustain register. */
+void register_write_ch6_sustain (uint16_t value);
+
 /* Write the bass-drum block register. */
 void register_write_ch6_block (uint16_t value);
 
 /* Write the bass-drum fnum register. */
 void register_write_ch6_fnum (uint16_t value);
 
+/* Write the high-hat / snare-drum sustain register. */
+void register_write_ch7_sustain (uint16_t value);
+
 /* Write the high-hat / snare-drum block register. */
 void register_write_ch7_block (uint16_t value);
 
 /* Write the high-hat / snare-drum fnum register. */
 void register_write_ch7_fnum (uint16_t value);
+
+/* Write the tom-tom / top-cymbal sustain register. */
+void register_write_ch8_sustain (uint16_t value);
 
 /* Write the tom-tom / top-cymbal block register. */
 void register_write_ch8_block (uint16_t value);

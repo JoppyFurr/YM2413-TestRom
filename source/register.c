@@ -7,8 +7,6 @@
 __sfr __at 0xf0 ym2413_addr;
 __sfr __at 0xf1 ym2413_data;
 
-#define SUSTAIN_BIT 0x20
-
 typedef struct instrument_regs_s {
     uint8_t r00;
     uint8_t r01;
@@ -83,17 +81,10 @@ static void register_write (uint8_t addr, uint8_t value)
 /*
  * Write the modulator AM bit.
  */
-#define AM_BIT 0x80
 void register_write_mod_am (uint16_t value)
 {
-    if (value)
-    {
-        instrument_regs.r00 |= AM_BIT;
-    }
-    else
-    {
-        instrument_regs.r00 &= ~AM_BIT;
-    }
+    instrument_regs.r00 &= 0x7f;
+    instrument_regs.r00 |= (value << 7) & 0x80;
     register_write (0x00, instrument_regs.r00);
 }
 
@@ -103,14 +94,8 @@ void register_write_mod_am (uint16_t value)
  */
 void register_write_car_am (uint16_t value)
 {
-    if (value)
-    {
-        instrument_regs.r01 |= AM_BIT;
-    }
-    else
-    {
-        instrument_regs.r01 &= ~AM_BIT;
-    }
+    instrument_regs.r01 &= 0x7f;
+    instrument_regs.r01 |= (value << 7) & 0x80;
     register_write (0x01, instrument_regs.r01);
 }
 
@@ -118,17 +103,10 @@ void register_write_car_am (uint16_t value)
 /*
  * Write the modulator vibrato bit.
  */
-#define VIBRATO_BIT 0x40
 void register_write_mod_vibrato (uint16_t value)
 {
-    if (value)
-    {
-        instrument_regs.r00 |= VIBRATO_BIT;
-    }
-    else
-    {
-        instrument_regs.r00 &= ~VIBRATO_BIT;
-    }
+    instrument_regs.r00 &= 0xbf;
+    instrument_regs.r00 |= (value << 6) & 0x40;
     register_write (0x00, instrument_regs.r00);
 }
 
@@ -138,14 +116,8 @@ void register_write_mod_vibrato (uint16_t value)
  */
 void register_write_car_vibrato (uint16_t value)
 {
-    if (value)
-    {
-        instrument_regs.r01 |= VIBRATO_BIT;
-    }
-    else
-    {
-        instrument_regs.r01 &= ~VIBRATO_BIT;
-    }
+    instrument_regs.r01 &= 0xbf;
+    instrument_regs.r01 |= (value << 6) & 0x40;
     register_write (0x01, instrument_regs.r01);
 }
 
@@ -153,17 +125,10 @@ void register_write_car_vibrato (uint16_t value)
 /*
  * Write the modulator envelope-type bit.
  */
-#define EGT_BIT 0x20
 void register_write_mod_eg_type (uint16_t value)
 {
-    if (value)
-    {
-        instrument_regs.r00 |= EGT_BIT;
-    }
-    else
-    {
-        instrument_regs.r00 &= ~EGT_BIT;
-    }
+    instrument_regs.r00 &= 0xdf;
+    instrument_regs.r00 |= (value << 5) & 0x20;
     register_write (0x00, instrument_regs.r00);
 }
 
@@ -173,14 +138,8 @@ void register_write_mod_eg_type (uint16_t value)
  */
 void register_write_car_eg_type (uint16_t value)
 {
-    if (value)
-    {
-        instrument_regs.r01 |= EGT_BIT;
-    }
-    else
-    {
-        instrument_regs.r01 &= ~EGT_BIT;
-    }
+    instrument_regs.r01 &= 0xdf;
+    instrument_regs.r01 |= (value << 5) & 0x20;
     register_write (0x01, instrument_regs.r01);
 }
 
@@ -188,17 +147,10 @@ void register_write_car_eg_type (uint16_t value)
 /*
  * Write the modulator key-scale rate bit.
  */
-#define KSR_BIT 0x10
 void register_write_mod_ksr (uint16_t value)
 {
-    if (value)
-    {
-        instrument_regs.r00 |= KSR_BIT;
-    }
-    else
-    {
-        instrument_regs.r00 &= ~KSR_BIT;
-    }
+    instrument_regs.r00 &= 0xef;
+    instrument_regs.r00 |= (value << 4) & 0x10;
     register_write (0x00, instrument_regs.r00);
 }
 
@@ -208,14 +160,8 @@ void register_write_mod_ksr (uint16_t value)
  */
 void register_write_car_ksr (uint16_t value)
 {
-    if (value)
-    {
-        instrument_regs.r01 |= KSR_BIT;
-    }
-    else
-    {
-        instrument_regs.r01 &= ~KSR_BIT;
-    }
+    instrument_regs.r01 &= 0xef;
+    instrument_regs.r01 |= (value << 4) & 0x10;
     register_write (0x01, instrument_regs.r01);
 }
 
@@ -278,17 +224,10 @@ void register_write_total_level (uint16_t value)
 /*
  * Write the modulator waveform bit.
  */
-#define MOD_WF_BIT 0x08
 void register_write_mod_waveform (uint16_t value)
 {
-    if (value)
-    {
-        instrument_regs.r03 |= MOD_WF_BIT;
-    }
-    else
-    {
-        instrument_regs.r03 &= ~MOD_WF_BIT;
-    }
+    instrument_regs.r03 &= 0xf7;
+    instrument_regs.r03 |= (value << 3) & 0x08;
     register_write (0x03, instrument_regs.r03);
 }
 
@@ -296,17 +235,10 @@ void register_write_mod_waveform (uint16_t value)
 /*
  * Write the carrier waveform bit.
  */
-#define CAR_WF_BIT 0x10
 void register_write_car_waveform (uint16_t value)
 {
-    if (value)
-    {
-        instrument_regs.r03 |= CAR_WF_BIT;
-    }
-    else
-    {
-        instrument_regs.r03 &= ~CAR_WF_BIT;
-    }
+    instrument_regs.r03 &= 0xef;
+    instrument_regs.r03 |= (value << 4) & 0x10;
     register_write (0x03, instrument_regs.r03);
 }
 
@@ -430,14 +362,8 @@ void register_write_fnum_block (uint16_t fnum, uint8_t block)
  */
 void register_write_ch6_sustain (uint16_t value)
 {
-    if (value)
-    {
-        channel_regs.r26 |= SUSTAIN_BIT;
-    }
-    else
-    {
-        channel_regs.r26 &= ~SUSTAIN_BIT;
-    }
+    channel_regs.r26 &= 0xdf;
+    channel_regs.r26 |= (value << 5) & 0x20;
     register_write (0x26, channel_regs.r26);
 }
 
@@ -472,14 +398,8 @@ void register_write_ch6_fnum (uint16_t value)
  */
 void register_write_ch7_sustain (uint16_t value)
 {
-    if (value)
-    {
-        channel_regs.r27 |= SUSTAIN_BIT;
-    }
-    else
-    {
-        channel_regs.r27 &= ~SUSTAIN_BIT;
-    }
+    channel_regs.r27 &= 0xdf;
+    channel_regs.r27 |= (value << 5) & 0x20;
     register_write (0x27, channel_regs.r27);
 }
 
@@ -514,14 +434,8 @@ void register_write_ch7_fnum (uint16_t value)
  */
 void register_write_ch8_sustain (uint16_t value)
 {
-    if (value)
-    {
-        channel_regs.r28 |= SUSTAIN_BIT;
-    }
-    else
-    {
-        channel_regs.r28 &= ~SUSTAIN_BIT;
-    }
+    channel_regs.r28 &= 0xdf;
+    channel_regs.r28 |= (value << 5) & 0x20;
     register_write (0x28, channel_regs.r28);
 }
 
@@ -677,14 +591,8 @@ void register_write_tc_key (uint16_t value)
  */
 void register_write_sustain (uint16_t value)
 {
-    if (value)
-    {
-        channel_regs.r20 |= SUSTAIN_BIT;
-    }
-    else
-    {
-        channel_regs.r20 &= ~SUSTAIN_BIT;
-    }
+    channel_regs.r20 &= 0xdf;
+    channel_regs.r20 |= (value << 5) & 0x20;
     register_write (0x20, channel_regs.r20);
 }
 
@@ -692,17 +600,10 @@ void register_write_sustain (uint16_t value)
 /*
  * Write the channel key-on bit.
  */
-#define KEY_BIT 0x10
 void register_write_key_on (uint16_t value)
 {
-    if (value)
-    {
-        channel_regs.r20 |= KEY_BIT;
-    }
-    else
-    {
-        channel_regs.r20 &= ~KEY_BIT;
-    }
+    channel_regs.r20 &= 0xef;
+    channel_regs.r20 |= (value << 4) & 0x10;
     register_write (0x20, channel_regs.r20);
 }
 

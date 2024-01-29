@@ -3,6 +3,9 @@
  * Joppy Furr 2023
  */
 
+/* Use the audio control register to take the YM2413 out of mute. */
+static void enable_fm (void);
+
 /* Write the modulator AM bit. */
 void register_write_mod_am (uint16_t value);
 

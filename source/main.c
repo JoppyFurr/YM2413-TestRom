@@ -450,6 +450,8 @@ void main (void)
     draw_title ();
     draw_footer ();
 
+    enable_fm ();
+
     /* Put the chip into rhythm mode */
     register_write_rhythm_mode (1);
 

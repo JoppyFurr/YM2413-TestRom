@@ -6,6 +6,7 @@
 #include <stdint.h>
 __sfr __at 0xf0 ym2413_addr;
 __sfr __at 0xf1 ym2413_data;
+__sfr __at 0xf2 audio_control;
 
 typedef struct instrument_regs_s {
     uint8_t r00;
@@ -36,6 +37,15 @@ typedef struct channel_regs_s {
 
 static instrument_regs_t instrument_regs = { 0 };
 static channel_regs_t channel_regs = { 0 };
+
+
+/*
+ * Use the audio control register to take the YM2413 out of mute.
+ */
+void enable_fm (void)
+{
+    audio_control = 0x01;
+}
 
 
 /*

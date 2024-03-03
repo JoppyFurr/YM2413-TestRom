@@ -99,39 +99,40 @@ note_t notes [29] = {
 /*
  * Update the cursor position.
  */
-static void cursor_update (uint8_t x, uint8_t y, uint8_t width, uint8_t height)
+static void cursor_update (uint8_t x, uint8_t y, uint8_t w, uint8_t h)
 {
     /* Clear any previous sprites */
     SMS_initSprites ();
 
     /* A height of zero indicates that we do not want to draw the cursor */
-    if (height > 0)
+    if (h > 0)
     {
-        x = (x << 3) - 8;
-        y = (y << 3) - 4;
+        /* The (x, y) coordinate refers to the area inside the cursor,
+         * so subtract the cursor's width */
+        x = x - 3;
+        y = y - 3;
 
-        /* Top */
-        SMS_addSprite (x, y, PATTERN_CURSOR + 0);
-        for (uint8_t i = 1; i < width; i++)
-        {
-            SMS_addSprite (x + (i << 3), y, PATTERN_CURSOR + 1);
-        }
-        SMS_addSprite (x + (width << 3), y, PATTERN_CURSOR + 2);
+        /* Top corners */
+        SMS_addSprite (x,         y, PATTERN_CURSOR + 0);
+        SMS_addSprite (x + w - 2, y, PATTERN_CURSOR + 2);
 
-        /* Sides */
-        for (uint8_t i = 1; i < height; i++)
+        /* Bottom corners */
+        SMS_addSprite (x,         y + h - 2, PATTERN_CURSOR + 6);
+        SMS_addSprite (x + w - 2, y + h - 2, PATTERN_CURSOR + 8);
+
+        /* Top & bottom edges */
+        for (int16_t filler = x + 8; filler < (x + w - 2); filler += 8)
         {
-            SMS_addSprite (x,                y + (i << 3), PATTERN_CURSOR + 3);
-            SMS_addSprite (x + (width << 3), y + (i << 3), PATTERN_CURSOR + 5);
+            SMS_addSprite (filler, y,         PATTERN_CURSOR + 1);
+            SMS_addSprite (filler, y + h - 2, PATTERN_CURSOR + 7);
         }
 
-        /* Bottom */
-        SMS_addSprite (x, y + (height << 3), PATTERN_CURSOR + 6);
-        for (uint8_t i = 1; i < width; i++)
+        /* Left & right edges */
+        for (int16_t filler = y + 8; filler < (y + h - 2); filler += 8)
         {
-            SMS_addSprite (x + (i << 3), y + (height << 3), PATTERN_CURSOR + 7);
+            SMS_addSprite (x,         filler, PATTERN_CURSOR + 3);
+            SMS_addSprite (x + w - 2, filler, PATTERN_CURSOR + 5);
         }
-        SMS_addSprite (x + (width << 3), y + (height << 3), PATTERN_CURSOR + 8);
     }
 
     SMS_copySpritestoSAT ();
@@ -479,10 +480,10 @@ void main (void)
 
     melody_mode (&gui_state);
 
-    cursor_update (gui_state.gui [gui_state.current_element].x,
-                   gui_state.gui [gui_state.current_element].y,
-                   gui_state.gui [gui_state.current_element].width,
-                   gui_state.gui [gui_state.current_element].height);
+    cursor_update (gui_state.gui [gui_state.current_element].cursor_x,
+                   gui_state.gui [gui_state.current_element].cursor_y,
+                   gui_state.gui [gui_state.current_element].cursor_w,
+                   gui_state.gui [gui_state.current_element].cursor_h);
 
     SMS_displayOn ();
 
@@ -518,10 +519,10 @@ void main (void)
 
         if (gui_state.cursor_update)
         {
-            cursor_update (gui_state.gui [gui_state.current_element].x,
-                           gui_state.gui [gui_state.current_element].y,
-                           gui_state.gui [gui_state.current_element].width,
-                           gui_state.gui [gui_state.current_element].height);
+            cursor_update (gui_state.gui [gui_state.current_element].cursor_x,
+                           gui_state.gui [gui_state.current_element].cursor_y,
+                           gui_state.gui [gui_state.current_element].cursor_w,
+                           gui_state.gui [gui_state.current_element].cursor_h);
             gui_state.cursor_update = false;
         }
 

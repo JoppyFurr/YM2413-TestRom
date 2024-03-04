@@ -430,6 +430,27 @@ void rhythm_mode (gui_state_t *state)
 
 
 /*
+ * Frame interrupt, used to colour-cycle the cursor.
+ */
+static void frame_interrupt (void)
+{
+    static uint8_t frame = 0;
+    static uint8_t hilight_index = 3;
+    frame++;
+
+    /* Simple 3-frame palette cycle to animate cursor */
+    if ((frame & 0x07) == 0)
+    {
+        static int band = 3;
+
+        SMS_setSpritePaletteColor (band, 2); /* Dim the previously bright band */
+        band = (band == 1) ? 3 : band - 1;
+        SMS_setSpritePaletteColor (band, 23); /* Brighten the new bright band */
+    }
+}
+
+
+/*
  * Entry point.
  */
 void main (void)
@@ -438,6 +459,9 @@ void main (void)
     SMS_loadBGPalette (palette);
     SMS_loadSpritePalette (palette);
     SMS_setBackdropColor (0);
+    SMS_setSpritePaletteColor (1, 2); /* Dark Red */
+    SMS_setSpritePaletteColor (2, 2); /* Dark Red */
+    SMS_setSpritePaletteColor (3, 23); /* Light Red */
 
     SMS_loadTiles (patterns, 0, sizeof (patterns));
     SMS_useFirstHalfTilesforSprites (true);
@@ -485,6 +509,7 @@ void main (void)
                    gui_state.gui [gui_state.current_element].cursor_w,
                    gui_state.gui [gui_state.current_element].cursor_h);
 
+    SMS_setFrameInterruptHandler (frame_interrupt);
     SMS_displayOn ();
 
     /* Main loop */

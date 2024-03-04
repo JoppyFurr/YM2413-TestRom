@@ -31,8 +31,9 @@ build_ym2413_test_rom ()
     echo "  Generating tile data..."
     mkdir -p tile_data
     (
-        # Note: Index 0 is used for transparency, use dark grey, our background colour.
-        $sneptile --output tile_data --palette 0x15 \
+        # Index 0 is used for transparency, use dark grey, our background colour.
+        # Index 1, 2, and 3, are used for the cursor colour-cycle.
+        $sneptile --output tile_data --palette 0x15 0x01 0x02 0x03 \
             tiles/empty.png \
             tiles/button.png \
             tiles/cursor.png \

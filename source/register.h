@@ -1,6 +1,6 @@
 /*
  * YM2413 Test ROM
- * Joppy Furr 2023
+ * Joppy Furr 2024
  */
 
 /* Use the audio control register to take the YM2413 out of mute. */

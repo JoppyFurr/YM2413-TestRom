@@ -1,6 +1,6 @@
 /*
  * YM2413 Test ROM
- * Joppy Furr 2023
+ * Joppy Furr 2024
  */
 
 typedef enum element_type_e {
@@ -299,7 +299,7 @@ static const gui_element_t melody_gui [ELEMENT_COUNT] = {
         .left = ELEMENT_CAR_SUSTAIN_LEVEL,  .right = ELEMENT_CAR_RELEASE_RATE
     },
     [ELEMENT_KEYBOARD] = {
-        .type = TYPE_KEYBOARD, .cursor_h = 0,
+        .type = TYPE_KEYBOARD, .cursor_w = 0,
         .down = ELEMENT_KEYBOARD,
         .left = ELEMENT_KEYBOARD,           .right = ELEMENT_KEYBOARD
     }

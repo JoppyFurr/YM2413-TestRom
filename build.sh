@@ -50,7 +50,7 @@ build_ym2413_test_rom ()
 
     mkdir -p build
     echo "  Compiling..."
-    for file in draw register main
+    for file in cursor draw register main
     do
         echo " -> ${file}.c"
         ${sdcc} -c -mz80 --peep-file ${devkitSMS}/SMSlib/src/peep-rules.txt -I ${SMSlib}/src \

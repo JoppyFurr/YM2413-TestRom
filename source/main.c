@@ -1,6 +1,6 @@
 /*
  * YM2413 Test ROM
- * Joppy Furr 2023
+ * Joppy Furr 2024
  */
 
 #include <stdbool.h>
@@ -15,9 +15,10 @@
 #include "../tile_data/palette.h"
 #include "../tile_data/pattern.h"
 #include "../tile_data/pattern_index.h"
+#include "cursor.h"
+#include "draw.h"
 #include "register.h"
 #include "gui_elements.h"
-#include "draw.h"
 
 
 typedef struct gui_state_s {
@@ -94,49 +95,6 @@ note_t notes [29] = {
     {435, 3}, {460, 3}, {488, 3}, {258, 4}, {274, 4}, {290, 4}, {307, 4}, {326, 4},
     {345, 4}, {365, 4}, {387, 4}, {410, 4}, {435, 4}
 };
-
-
-/*
- * Update the cursor position.
- */
-static void cursor_update (uint8_t x, uint8_t y, uint8_t w, uint8_t h)
-{
-    /* Clear any previous sprites */
-    SMS_initSprites ();
-
-    /* A height of zero indicates that we do not want to draw the cursor */
-    if (h > 0)
-    {
-        /* The (x, y) coordinate refers to the area inside the cursor,
-         * so subtract the cursor's width */
-        x = x - 3;
-        y = y - 3;
-
-        /* Top corners */
-        SMS_addSprite (x,         y, PATTERN_CURSOR + 0);
-        SMS_addSprite (x + w - 2, y, PATTERN_CURSOR + 2);
-
-        /* Bottom corners */
-        SMS_addSprite (x,         y + h - 2, PATTERN_CURSOR + 6);
-        SMS_addSprite (x + w - 2, y + h - 2, PATTERN_CURSOR + 8);
-
-        /* Top & bottom edges */
-        for (int16_t filler = x + 8; filler < (x + w - 2); filler += 8)
-        {
-            SMS_addSprite (filler, y,         PATTERN_CURSOR + 1);
-            SMS_addSprite (filler, y + h - 2, PATTERN_CURSOR + 7);
-        }
-
-        /* Left & right edges */
-        for (int16_t filler = y + 8; filler < (y + h - 2); filler += 8)
-        {
-            SMS_addSprite (x,         filler, PATTERN_CURSOR + 3);
-            SMS_addSprite (x + w - 2, filler, PATTERN_CURSOR + 5);
-        }
-    }
-
-    SMS_copySpritestoSAT ();
-}
 
 
 /*
@@ -447,6 +405,9 @@ static void frame_interrupt (void)
         band = (band == 1) ? 3 : band - 1;
         SMS_setSpritePaletteColor (band, 23); /* Brighten the new bright band */
     }
+
+    /* Animate the cursor slide */
+    cursor_tick ();
 }
 
 
@@ -504,7 +465,7 @@ void main (void)
 
     melody_mode (&gui_state);
 
-    cursor_update (gui_state.gui [gui_state.current_element].cursor_x,
+    cursor_target (gui_state.gui [gui_state.current_element].cursor_x,
                    gui_state.gui [gui_state.current_element].cursor_y,
                    gui_state.gui [gui_state.current_element].cursor_w,
                    gui_state.gui [gui_state.current_element].cursor_h);
@@ -544,7 +505,7 @@ void main (void)
 
         if (gui_state.cursor_update)
         {
-            cursor_update (gui_state.gui [gui_state.current_element].cursor_x,
+            cursor_target (gui_state.gui [gui_state.current_element].cursor_x,
                            gui_state.gui [gui_state.current_element].cursor_y,
                            gui_state.gui [gui_state.current_element].cursor_w,
                            gui_state.gui [gui_state.current_element].cursor_h);

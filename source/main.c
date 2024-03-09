@@ -220,36 +220,54 @@ static void element_navigate (gui_state_t *state, uint16_t key_pressed)
                 state->current_element = element->up;
                 break;
 
-            case PORT_A_KEY_DOWN:
-                if (element->down == ELEMENT_KEYBOARD)
-                {
-                    /* Hide the cursor */
-                    SMS_initSprites ();
-                    SMS_copySpritestoSAT ();
-
-                    /* Select a key */
-                    state->keyboard_key = element->x - 1;
-                    state->keyboard_update = true;
-                }
-                state->current_element = element->down;
-                break;
-
-            case PORT_A_KEY_LEFT:
-                state->current_element = element->left;
+            case PORT_A_KEY_UP | PORT_A_KEY_RIGHT:
+                state->current_element = state->gui [element->right].up;
                 break;
 
             case PORT_A_KEY_RIGHT:
                 state->current_element = element->right;
                 break;
 
+            case PORT_A_KEY_DOWN | PORT_A_KEY_RIGHT:
+                state->current_element = state->gui [element->right].down;
+                break;
+
+            case PORT_A_KEY_DOWN:
+                state->current_element = element->down;
+                break;
+
+            case PORT_A_KEY_DOWN | PORT_A_KEY_LEFT:
+                state->current_element = state->gui [element->left].down;
+                break;
+
+            case PORT_A_KEY_LEFT:
+                state->current_element = element->left;
+                break;
+
+            case PORT_A_KEY_UP | PORT_A_KEY_LEFT:
+                state->current_element = state->gui [element->left].up;
+                break;
+
             default:
                 break;
         }
 
-        /* "BUTTON" elements turn off when unselected.
-         * Note that our pointer, 'element', still points at the previous element */
         if (state->current_element != element_was)
         {
+            /* Moving to the keyboard should hide the cursor */
+            if (state->current_element == ELEMENT_KEYBOARD)
+            {
+                /* Hide the cursor */
+                SMS_initSprites ();
+                SMS_copySpritestoSAT ();
+
+                /* Select a key */
+                state->keyboard_key = element->x - 1;
+                state->keyboard_update = true;
+            }
+
+            /* "BUTTON" elements turn off when unselected. Note that
+             * our pointer, 'element', still points at the previous element */
             if (element->type == TYPE_BUTTON)
             {
                 state->element_values [element_was] = 0;
@@ -480,14 +498,9 @@ void main (void)
         uint16_t key_released = SMS_getKeysReleased ();
 
         /* Navigation */
-        switch (key_pressed & PORT_A_DPAD_MASK)
+        if (key_pressed & PORT_A_DPAD_MASK)
         {
-            case PORT_A_KEY_UP:
-            case PORT_A_KEY_DOWN:
-            case PORT_A_KEY_LEFT:
-            case PORT_A_KEY_RIGHT:
-                element_navigate (&gui_state, key_pressed);
-                break;
+            element_navigate (&gui_state, key_pressed);
         }
 
         /* Button input */

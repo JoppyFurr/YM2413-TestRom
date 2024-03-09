@@ -69,7 +69,7 @@ void draw_footer (void)
         PATTERN_FOOTER + 0, PATTERN_FOOTER + 1, PATTERN_FOOTER + 2,
         PATTERN_FOOTER + 3, PATTERN_FOOTER + 4
     };
-    SMS_loadTileMapArea (1, 23, name, 5, 1);
+    SMS_loadTileMapArea (0, 23, name, 5, 1);
 
     const uint16_t version [3] = {
         PATTERN_FOOTER + 5, PATTERN_FOOTER + 6, PATTERN_FOOTER + 7,
@@ -301,50 +301,50 @@ void draw_rhythm_labels (void)
         PATTERN_RHYTHM_LABELS + 4, PATTERN_RHYTHM_LABELS + 5, PATTERN_RHYTHM_LABELS + 6, PATTERN_RHYTHM_LABELS + 7,
         PATTERN_RHYTHM_LABELS + 8,
     };
-    SMS_loadTileMapArea (5, 6, block_fnum, 9, 1);
-    SMS_loadTileMapArea (5, 12, block_fnum, 9, 1);
-    SMS_loadTileMapArea (5, 20, block_fnum, 9, 1);
+    SMS_loadTileMapArea (4, 6, block_fnum, 9, 1);
+    SMS_loadTileMapArea (4, 12, block_fnum, 9, 1);
+    SMS_loadTileMapArea (4, 20, block_fnum, 9, 1);
 
     /* Volume */
     const uint16_t volume [] = { PATTERN_RHYTHM_LABELS + 9, PATTERN_RHYTHM_LABELS + 10 };
-    SMS_loadTileMapArea (17,  6, volume, 2, 1);
-    SMS_loadTileMapArea (17, 10, volume, 2, 1);
-    SMS_loadTileMapArea (17, 14, volume, 2, 1);
-    SMS_loadTileMapArea (17, 18, volume, 2, 1);
-    SMS_loadTileMapArea (17, 22, volume, 2, 1);
+    SMS_loadTileMapArea (16,  6, volume, 2, 1);
+    SMS_loadTileMapArea (16, 10, volume, 2, 1);
+    SMS_loadTileMapArea (16, 14, volume, 2, 1);
+    SMS_loadTileMapArea (16, 18, volume, 2, 1);
+    SMS_loadTileMapArea (16, 22, volume, 2, 1);
 
     /* Bass Drum */
     const uint16_t bass_drum [] = {
         PATTERN_RHYTHM_LABELS + 11, PATTERN_RHYTHM_LABELS + 12, PATTERN_RHYTHM_LABELS + 13, PATTERN_RHYTHM_LABELS + 14,
         PATTERN_RHYTHM_LABELS + 15
     };
-    SMS_loadTileMapArea (24, 4, bass_drum, 5, 1);
+    SMS_loadTileMapArea (23, 4, bass_drum, 5, 1);
 
     /* High Hat */
     const uint16_t high_hat [] = {
         PATTERN_RHYTHM_LABELS + 16, PATTERN_RHYTHM_LABELS + 17, PATTERN_RHYTHM_LABELS + 18, PATTERN_RHYTHM_LABELS + 19
     };
-    SMS_loadTileMapArea (24, 8, high_hat, 4, 1);
+    SMS_loadTileMapArea (23, 8, high_hat, 4, 1);
 
     /* Snare Drum */
     const uint16_t snare_drum [] = {
         PATTERN_RHYTHM_LABELS + 20, PATTERN_RHYTHM_LABELS + 21, PATTERN_RHYTHM_LABELS + 22, PATTERN_RHYTHM_LABELS + 23,
         PATTERN_RHYTHM_LABELS + 24, PATTERN_RHYTHM_LABELS + 25
     };
-    SMS_loadTileMapArea (24, 12, snare_drum, 6, 1);
+    SMS_loadTileMapArea (23, 12, snare_drum, 6, 1);
 
     /* Tom Tom */
     const uint16_t tom_tom [] = {
         PATTERN_RHYTHM_LABELS + 26, PATTERN_RHYTHM_LABELS + 27, PATTERN_RHYTHM_LABELS + 28, PATTERN_RHYTHM_LABELS + 29
     };
-    SMS_loadTileMapArea (24, 16, tom_tom, 4, 1);
+    SMS_loadTileMapArea (23, 16, tom_tom, 4, 1);
 
     /* Top Cymbal */
     const uint16_t top_cymbal [] = {
         PATTERN_RHYTHM_LABELS + 30, PATTERN_RHYTHM_LABELS + 31, PATTERN_RHYTHM_LABELS + 32, PATTERN_RHYTHM_LABELS + 33,
         PATTERN_RHYTHM_LABELS + 34, PATTERN_RHYTHM_LABELS + 35
     };
-    SMS_loadTileMapArea (24, 20, top_cymbal, 6, 1);
+    SMS_loadTileMapArea (23, 20, top_cymbal, 6, 1);
 
     /* Connecting lines */
     const uint16_t lines [] = {
@@ -354,22 +354,22 @@ void draw_rhythm_labels (void)
         PATTERN_RHYTHM_LABELS + 41, PATTERN_RHYTHM_LABELS + 38                              /* L-  */
     };
 
-    SMS_loadTileMapArea (14,  4, &lines [0], 3, 1);
-    SMS_loadTileMapArea (19,  4, &lines [3], 2, 1);
+    SMS_loadTileMapArea (13,  4, &lines [0], 3, 1);
+    SMS_loadTileMapArea (18,  4, &lines [3], 2, 1);
 
-    SMS_setTileatXY (14, 10, PATTERN_RHYTHM_LABELS + 36);
-    SMS_loadTileMapArea (15,  8, &lines [3], 2, 1);
-    SMS_loadTileMapArea (15,  9, &lines [5], 1, 3);
-    SMS_loadTileMapArea (15, 12, &lines [8], 2, 1);
-    SMS_loadTileMapArea (19,  8, &lines [3], 2, 1);
-    SMS_loadTileMapArea (19, 12, &lines [3], 2, 1);
+    SMS_setTileatXY (13, 10, PATTERN_RHYTHM_LABELS + 36);
+    SMS_loadTileMapArea (14,  8, &lines [3], 2, 1);
+    SMS_loadTileMapArea (14,  9, &lines [5], 1, 3);
+    SMS_loadTileMapArea (14, 12, &lines [8], 2, 1);
+    SMS_loadTileMapArea (18,  8, &lines [3], 2, 1);
+    SMS_loadTileMapArea (18, 12, &lines [3], 2, 1);
 
-    SMS_setTileatXY (14, 18, PATTERN_RHYTHM_LABELS + 36);
-    SMS_loadTileMapArea (15, 16, &lines [3], 2, 1);
-    SMS_loadTileMapArea (15, 17, &lines [5], 1, 3);
-    SMS_loadTileMapArea (15, 20, &lines [8], 2, 1);
-    SMS_loadTileMapArea (19, 16, &lines [3], 2, 1);
-    SMS_loadTileMapArea (19, 20, &lines [3], 2, 1);
+    SMS_setTileatXY (13, 18, PATTERN_RHYTHM_LABELS + 36);
+    SMS_loadTileMapArea (14, 16, &lines [3], 2, 1);
+    SMS_loadTileMapArea (14, 17, &lines [5], 1, 3);
+    SMS_loadTileMapArea (14, 20, &lines [8], 2, 1);
+    SMS_loadTileMapArea (18, 16, &lines [3], 2, 1);
+    SMS_loadTileMapArea (18, 20, &lines [3], 2, 1);
 }
 
 
@@ -439,22 +439,22 @@ void draw_reset (uint8_t from, uint8_t to)
  */
 void draw_tabs (bool rhythm)
 {
-    const uint16_t melody_tiles [18] =  {
+    const uint16_t melody_tiles [20] =  {
         PATTERN_TABS +  0, PATTERN_TABS +  1, PATTERN_TABS +  2, PATTERN_TABS +  3,
         PATTERN_TABS +  4, PATTERN_TABS +  5, PATTERN_TABS +  6, PATTERN_TABS +  7,
         PATTERN_TABS +  8, PATTERN_TABS +  9, PATTERN_TABS + 10, PATTERN_TABS + 11,
         PATTERN_TABS + 12, PATTERN_TABS + 13, PATTERN_TABS + 14, PATTERN_TABS + 15,
-        PATTERN_TABS + 16, PATTERN_TABS + 17
+        PATTERN_TABS + 16, PATTERN_TABS + 17, PATTERN_TABS + 18, PATTERN_TABS + 19
     };
-    const uint16_t rhythm_tiles [18] =  {
-        PATTERN_TABS + 18, PATTERN_TABS + 19, PATTERN_TABS + 20, PATTERN_TABS + 21,
-        PATTERN_TABS + 22, PATTERN_TABS + 23, PATTERN_TABS + 24, PATTERN_TABS + 25,
-        PATTERN_TABS + 26, PATTERN_TABS + 27, PATTERN_TABS + 28, PATTERN_TABS + 29,
-        PATTERN_TABS + 30, PATTERN_TABS + 31, PATTERN_TABS + 32, PATTERN_TABS + 33,
-        PATTERN_TABS + 34, PATTERN_TABS + 35
+    const uint16_t rhythm_tiles [20] =  {
+        PATTERN_TABS + 20, PATTERN_TABS + 21, PATTERN_TABS + 22, PATTERN_TABS + 23,
+        PATTERN_TABS + 24, PATTERN_TABS + 25, PATTERN_TABS + 26, PATTERN_TABS + 27,
+        PATTERN_TABS + 28, PATTERN_TABS + 29, PATTERN_TABS + 30, PATTERN_TABS + 31,
+        PATTERN_TABS + 32, PATTERN_TABS + 33, PATTERN_TABS + 34, PATTERN_TABS + 35,
+        PATTERN_TABS + 36, PATTERN_TABS + 37, PATTERN_TABS + 38, PATTERN_TABS + 39
     };
 
-    SMS_loadTileMapArea (23, 0, rhythm ? rhythm_tiles : melody_tiles, 9, 2);
+    SMS_loadTileMapArea (22, 0, rhythm ? rhythm_tiles : melody_tiles, 10, 2);
 }
 
 

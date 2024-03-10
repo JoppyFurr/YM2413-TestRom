@@ -410,6 +410,49 @@ void rhythm_mode (void)
 
 
 /*
+ * When changing element values, repeat the button press if held down.
+ * Start repeating at 500 ms. Repeat 30 times per second.
+ */
+static void key_repeat (void)
+{
+    static uint8_t start_timer = 0;
+    static uint8_t repeat_timer = 0;
+
+    /* When the input changes, just reset the timer */
+    if (SMS_getKeysPressed () || SMS_getKeysReleased ())
+    {
+        start_timer = 0;
+        repeat_timer = 0;
+        return;
+    }
+
+    /* Repeat should only affect value inputs */
+    const gui_element_t *element = &gui_state.gui [gui_state.current_element];
+    if (element->type != TYPE_VALUE && element->type != TYPE_VALUE_WIDE)
+    {
+        return;
+    }
+
+    /* If exactly one button is held down, run the timer */
+    uint16_t key_status = SMS_getKeysStatus ();
+    if (key_status == PORT_A_KEY_1 || key_status == PORT_A_KEY_2)
+    {
+        if (start_timer == 30) /* 30 frames for 500 ms start time */
+        {
+            if (++repeat_timer & 0x01) /* Every second frame for 30 repeats per second */
+            {
+                element_input (key_status, 0);
+            }
+        }
+        else
+        {
+            start_timer++;
+        }
+    }
+}
+
+
+/*
  * Frame interrupt, used to colour-cycle the cursor.
  */
 static void frame_interrupt (void)
@@ -430,6 +473,8 @@ static void frame_interrupt (void)
 
     /* Animate the cursor slide */
     cursor_tick ();
+
+    key_repeat ();
 }
 
 

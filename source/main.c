@@ -490,6 +490,7 @@ void main (void)
     SMS_setSpritePaletteColor (1, 2); /* Dark Red */
     SMS_setSpritePaletteColor (2, 2); /* Dark Red */
     SMS_setSpritePaletteColor (3, 23); /* Light Red */
+    SMS_setBGPaletteColor (4, 58); /* Light Lavender */
 
     SMS_loadTiles (patterns, 0, sizeof (patterns));
     SMS_useFirstHalfTilesforSprites (true);
@@ -586,6 +587,7 @@ void main (void)
             {
                 /* Treat leaving the keyboard as letting go of the key */
                 register_write_key_on (0);
+                SMS_setBGPaletteColor (4, 58); /* Light Lavender */
             }
 
 
@@ -618,10 +620,12 @@ void main (void)
                 if (key_pressed & PORT_A_KEY_MASK)
                 {
                     register_write_key_on (1);
+                    SMS_setBGPaletteColor (4, 37); /* Dark Lavender */
                 }
                 else if ((key_released & PORT_A_KEY_MASK) && (key_status & PORT_A_KEY_MASK) == 0)
                 {
                     register_write_key_on (0);
+                    SMS_setBGPaletteColor (4, 58); /* Light Lavender */
                 }
             }
 

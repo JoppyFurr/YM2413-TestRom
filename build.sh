@@ -33,7 +33,8 @@ build_ym2413_test_rom ()
     (
         # Index 0 is used for transparency, use dark grey, our background colour.
         # Index 1, 2, and 3, are used for the cursor colour-cycle.
-        $sneptile --output tile_data --palette 0x15 0x01 0x02 0x03 \
+        # Index 4 is used for the selected key colour.
+        $sneptile --output tile_data --palette 0x15 0x01 0x02 0x03 0x33 \
             tiles/empty.png \
             tiles/button.png \
             tiles/cursor.png \

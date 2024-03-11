@@ -54,21 +54,21 @@ build_ym2413_test_rom ()
     echo "  Compiling..."
     for file in cursor draw register main
     do
-        echo " -> ${file}.c"
+        echo "   -> ${file}.c"
         ${sdcc} -c -mz80 --peep-file ${devkitSMS}/SMSlib/src/peep-rules.txt -I ${SMSlib}/src \
             -o "build/${file}.rel" "source/${file}.c" || exit 1
     done
 
     echo ""
-    echo "Linking..."
+    echo "  Linking..."
     ${sdcc} -o build/YM2413_TestRom.ihx -mz80 --no-std-crt0 --data-loc 0xC000 ${devkitSMS}/crt0/crt0_sms.rel build/*.rel ${SMSlib}/SMSlib.lib || exit 1
 
     echo ""
-    echo "Generating ROM..."
+    echo "  Generating ROM..."
     ${ihx2sms} build/YM2413_TestRom.ihx YM2413_TestRom.sms || exit 1
 
     echo ""
-    echo "Done"
+    echo "  Done"
 }
 
 # Clean up any old build artefacts

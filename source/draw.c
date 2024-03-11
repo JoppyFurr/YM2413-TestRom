@@ -61,6 +61,39 @@ void draw_button (uint8_t x, uint8_t y, bool value)
 
 
 /*
+ * Use sprites to draw the block, fnum above the keyboard.
+ *
+ * Note: An array is used to avoid an issue where SMS_addSprite
+ *       was corrupting variable contents.
+ */
+void draw_block_fnum (uint16_t fnum, uint8_t block)
+{
+    uint8_t digit_1 = fnum / 100;
+    uint8_t digit_2 = (fnum % 100) / 10;
+    uint8_t digit_3 = fnum % 10;
+
+    SMS_initSprites ();
+
+    /* Block is always one digit, 0-7 */
+    SMS_addSprite (208, 127, PATTERN_FLOATING_DIGITS + block);
+
+    /* Fnum is 1-3 digits, 0-511 */
+    if (fnum >= 100)
+    {
+        SMS_addSprite (224, 127, PATTERN_FLOATING_DIGITS + digit_1);
+    }
+
+    if (fnum >= 10)
+    {
+        SMS_addSprite (232, 127, PATTERN_FLOATING_DIGITS + digit_2);
+    }
+
+    SMS_addSprite (240, 127, PATTERN_FLOATING_DIGITS + digit_3);
+    SMS_copySpritestoSAT ();
+}
+
+
+/*
  * Draw the footer banner at the bottom of the screen.
  */
 void draw_footer (void)

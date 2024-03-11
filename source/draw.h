@@ -6,6 +6,9 @@
 /* Draw a button indicator. */
 void draw_button (uint8_t x, uint8_t y, bool value);
 
+/* Use sprites to draw the block, fnum above the keyboard. */
+void draw_block_fnum (uint16_t fnum, uint8_t block);
+
 /* Draw the footer banner at the bottom of the screen. */
 void draw_footer (void);
 

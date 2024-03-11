@@ -84,6 +84,9 @@ void register_write_fnum_block (uint16_t fnum, uint8_t block);
 /* Write the sustain register. */
 void register_write_sustain (uint16_t value);
 
+/* Read the stored copy of the key_on bit. */
+bool register_stored_key_on (void);
+
 /* Write the key register. */
 void register_write_key_on (uint16_t value);
 

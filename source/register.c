@@ -3,6 +3,7 @@
  * Joppy Furr 2024
  */
 
+#include <stdbool.h>
 #include <stdint.h>
 __sfr __at 0xf0 ym2413_addr;
 __sfr __at 0xf1 ym2413_data;
@@ -604,6 +605,15 @@ void register_write_sustain (uint16_t value)
     channel_regs.r20 &= 0xdf;
     channel_regs.r20 |= (value << 5) & 0x20;
     register_write (0x20, channel_regs.r20);
+}
+
+
+/*
+ * Read the stored copy of the key_on bit.
+ */
+bool register_stored_key_on (void)
+{
+    return (channel_regs.r20 >> 4) & 0x01;
 }
 
 

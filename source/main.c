@@ -487,10 +487,11 @@ void main (void)
     SMS_loadBGPalette (palette);
     SMS_loadSpritePalette (palette);
     SMS_setBackdropColor (0);
-    SMS_setSpritePaletteColor (1, 2); /* Dark Red */
-    SMS_setSpritePaletteColor (2, 2); /* Dark Red */
-    SMS_setSpritePaletteColor (3, 23); /* Light Red */
-    SMS_setBGPaletteColor (4, 58); /* Light Lavender */
+    SMS_setSpritePaletteColor (1, 2);   /* Cursor - Dark Red */
+    SMS_setSpritePaletteColor (2, 2);   /* Cursor - Dark Red */
+    SMS_setSpritePaletteColor (3, 23);  /* Cursor - Light Red */
+    SMS_setSpritePaletteColor (4, 3);   /* Floating Digits - Pure Red */
+    SMS_setBGPaletteColor (4, 58);      /* Selected key - Light Lavender */
 
     SMS_loadTiles (patterns, 0, sizeof (patterns));
     SMS_useFirstHalfTilesforSprites (true);
@@ -582,6 +583,11 @@ void main (void)
 
                 note_t *note = &notes [gui_state.keyboard_key - 1];
                 register_write_fnum_block (note->fnum, note->block);
+                if (register_stored_key_on ())
+                {
+                    draw_block_fnum (note->fnum, note->block);
+                }
+
             }
             else
             {
@@ -621,11 +627,17 @@ void main (void)
                 {
                     register_write_key_on (1);
                     SMS_setBGPaletteColor (4, 37); /* Dark Lavender */
+                    note_t *note = &notes [gui_state.keyboard_key - 1];
+                    draw_block_fnum (note->fnum, note->block);
                 }
                 else if ((key_released & PORT_A_KEY_MASK) && (key_status & PORT_A_KEY_MASK) == 0)
                 {
                     register_write_key_on (0);
                     SMS_setBGPaletteColor (4, 58); /* Light Lavender */
+
+                    /* Hide Block, Fnum */
+                    SMS_initSprites ();
+                    SMS_copySpritestoSAT ();
                 }
             }
 

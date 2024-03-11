@@ -3,7 +3,7 @@ echo ""
 echo "YM2413 Test ROM Build Script"
 echo "-------------------------------"
 
-sdcc="${HOME}/Code/sdcc-4.2.0/bin/sdcc"
+sdcc="${HOME}/Code/sdcc-4.3.0/bin/sdcc"
 devkitSMS="${HOME}/Code/devkitSMS"
 SMSlib="${devkitSMS}/SMSlib"
 ihx2sms="${devkitSMS}/ihx2sms/Linux/ihx2sms"
